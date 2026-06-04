@@ -16,9 +16,13 @@ export function LoginPage () {
   const navigate = useNavigate();
 
   async function onSubmit(data){
+    try{
    const response = await login(data);
     setToken(response.data.accessToken)
     navigate('/dashboard')
+  } catch (error) {
+    console.error(error)
+    }
   };
   return(
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -32,5 +36,5 @@ export function LoginPage () {
 
       <button type="submit"></button>
     </form>
-  )
-}
+  );
+};
