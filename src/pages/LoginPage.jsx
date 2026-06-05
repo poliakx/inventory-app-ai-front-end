@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { useAuthStore } from "../store/authStore.js";
@@ -24,17 +25,23 @@ export function LoginPage () {
     console.error(error)
     }
   };
+
+  const token = useAuthStore((store) => store.token);
+
+  useEffect(() => {
+    if (token) navigate('/dashboard')
+  }, [token])
   return(
     <form onSubmit={handleSubmit(onSubmit)}>
-      <input {...register('email')}>
+      <input placeholder="email" {...register('email')}>
       </input>
       {errors.email && <span>{errors.email.message}</span>}
 
-      <input {...register('password')}>
+      <input placeholder="password" {...register('password')}>
       </input>
       {errors.password && <span>{errors.password.message}</span>}
 
-      <button type="submit"></button>
+      <button type="submit">click</button>
     </form>
   );
 };
