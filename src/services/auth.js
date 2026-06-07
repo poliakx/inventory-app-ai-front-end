@@ -1,6 +1,6 @@
-import axios from 'axios'
+import { apiClient } from './api.js'
 
 export async function login (data){
-  const response = await axios.post("/api/auth/login", data)
+  const response = await apiClient.post('/auth/login', data)
   return response
 };
