@@ -9,7 +9,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route element={<ProtectedRoute />}>
-        <Route path="/dashboard" element={<DashboardPage/>} />
+          <Route path="/dashboard" element={<DashboardPage/>} />
         </Route>
         <Route path="/login" element ={<LoginPage/>} />
 
