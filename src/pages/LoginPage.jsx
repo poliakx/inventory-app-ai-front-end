@@ -5,6 +5,10 @@ import { useAuthStore } from "../store/authStore.js";
 import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { login } from "../services/auth.js";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Button } from "@/components/ui/button"
 
 const loginSchema = z.object({
     email: z.string().email(),
@@ -32,16 +36,27 @@ export function LoginPage () {
     if (token) navigate('/dashboard')
   }, [token])
   return(
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <input placeholder="email" {...register('email')}>
-      </input>
-      {errors.email && <span>{errors.email.message}</span>}
-
-      <input placeholder="password" {...register('password')}>
-      </input>
-      {errors.password && <span>{errors.password.message}</span>}
-
-      <button type="submit">click</button>
-    </form>
+    <div className="flex min-h-screen items-center justify-center">
+      <Card>
+        <CardHeader>
+          <CardTitle>Login</CardTitle>
+        </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div>
+            <Label>Email</Label>
+            <Input placeholder="email" {...register('email')} />
+            {errors.email && <span>{errors.email.message}</span>}
+          </div>
+        <div>
+            <Label>Password</Label>
+            <Input placeholder="password" {...register('password')}/>
+            {errors.password && <span>{errors.password.message}</span>}
+          </div>
+    <Button type="submit">Login</Button>
+  </form>
+      </CardContent>
+    </Card>
+  </div>
   );
 };
