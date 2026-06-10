@@ -1,10 +1,20 @@
-import { useNavigate } from "react-router-dom"
-import { useAuthStore } from "../store/authStore"
+import { useEffect, useState } from "react"
+import { getProducts } from "@/services/products";
 
 export function DashboardPage() {
-  const { logout } = useAuthStore()
-  const navigate = useNavigate() 
+  const [products, setProducts  ]= useState([]);
+
+  useEffect(() =>{
+    async function fetchData() {
+      const res = await getProducts()
+      setProducts(res.data.data.products)
+    }
+    fetchData()
+  }, [])
     return (
-      <div></div>
+      <div>
+        <p>Total products: {products.length}</p>
+        <p>Low stock: {products.filter(p => p.quantity < 10).length}</p>
+      </div>
     )
 }
