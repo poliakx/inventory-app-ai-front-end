@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { getProducts } from "@/services/products";
+import { getProducts } from "@/features/products/products.service";
 
 export function DashboardPage() {
   const [products, setProducts  ]= useState([]);

@@ -1,4 +1,4 @@
-import { apiClient } from './api.js'
+import { apiClient } from '@/lib/api.js'
 
 export async function login (data){
   const res = await apiClient.post('/auth/login', data)

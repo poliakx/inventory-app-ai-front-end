@@ -1,5 +1,5 @@
 import { NavLink, Outlet,  useNavigate } from "react-router-dom";
-import { useAuthStore } from "@/store/authStore";
+import { useAuthStore } from "@/features/auth/authStore";
 
 export function AppLayout() {
 

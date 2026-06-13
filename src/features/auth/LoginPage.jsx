@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
-import { useAuthStore } from "../store/authStore.js";
+import { useAuthStore } from "./authStore.js";
 import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { login } from "../services/auth.js";
+import { login } from "./auth.service.js";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
