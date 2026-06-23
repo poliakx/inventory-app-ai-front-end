@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { getProducts } from "./products.service.js";
 
 export function ProductsPage() {
@@ -35,7 +36,9 @@ export function ProductsPage() {
       </thead>
       <tbody >
         {filteredProducts.map(product => <tr key={product.id}>
-         <td>{product.name}</td>
+         <td>
+          <Link to={`/products/${product.id}`}>{product.name}</Link>
+          </td>
          <td>{product.price}</td>
          <td>{product.quantity}</td> 
           </tr>)}

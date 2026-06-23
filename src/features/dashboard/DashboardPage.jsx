@@ -7,7 +7,7 @@ export function DashboardPage() {
   useEffect(() =>{
     async function fetchData() {
       const res = await getProducts()
-      setProducts(res.data.data.products)
+      setProducts(res.data.products)
     }
     fetchData()
   }, [])
