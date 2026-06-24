@@ -8,6 +8,7 @@ import { AppLayout } from './components/layouts/AppLayout.jsx'
 import { ProductDetailsPage } from './features/products/ProductDetailsPage.jsx'
 import { getCurrentUser } from './features/auth/auth.service.js'
 import { useAuthStore } from './features/auth/authStore.js'
+import { CategoryPage } from './features/categories/CategoryPage.jsx'
 
 function App() {
 
@@ -38,9 +39,10 @@ function App() {
       <Routes>
         <Route element={<ProtectedRoute />}>
           <Route element={<AppLayout/>}>
-          <Route path="/dashboard" element={<DashboardPage/>} />
-           <Route path="/products" element={<ProductsPage/>} />
-           <Route path="/products/:id" element={<ProductDetailsPage/>}/>
+            <Route path="/dashboard" element={<DashboardPage/>} />
+            <Route path="/products" element={<ProductsPage/>} />
+            <Route path="/products/:id" element={<ProductDetailsPage/>}/>
+            <Route path="/categories" element={<CategoryPage/>}/>
           </Route>
         </Route>
         <Route path="/login" element ={<LoginPage/>} />  
