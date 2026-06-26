@@ -1,14 +1,18 @@
 import { useEffect } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
+
+import { getCurrentUser } from './features/auth/auth.service.js'
+import { useAuthStore } from './features/auth/authStore.js'
+
+import { AppLayout } from './components/layouts/AppLayout.jsx'
+import { ProtectedRoute } from './components/ProtectedRoute.jsx'
+
+import { CategoryPage } from './features/categories/CategoryPage.jsx'
 import { LoginPage } from './features/auth/LoginPage.jsx'
 import { DashboardPage } from './features/dashboard/DashboardPage.jsx'
 import { ProductsPage } from './features/products/ProductsPage.jsx'
-import { ProtectedRoute } from './components/ProtectedRoute.jsx'
-import { AppLayout } from './components/layouts/AppLayout.jsx'
 import { ProductDetailsPage } from './features/products/ProductDetailsPage.jsx'
-import { getCurrentUser } from './features/auth/auth.service.js'
-import { useAuthStore } from './features/auth/authStore.js'
-import { CategoryPage } from './features/categories/CategoryPage.jsx'
+import { ProductCreatePage } from './features/products/ProductCreatePage.jsx'
 
 function App() {
 
@@ -41,6 +45,7 @@ function App() {
           <Route element={<AppLayout/>}>
             <Route path="/dashboard" element={<DashboardPage/>} />
             <Route path="/products" element={<ProductsPage/>} />
+            <Route path="/products/new" element={<ProductCreatePage/>} />
             <Route path="/products/:id" element={<ProductDetailsPage/>}/>
             <Route path="/categories" element={<CategoryPage/>}/>
           </Route>

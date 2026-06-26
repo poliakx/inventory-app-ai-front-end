@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getProducts } from "./products.service.js";
+import { ProductCreatePage } from "./ProductCreatePage.jsx";
 
 export function ProductsPage() {
 
@@ -25,6 +26,7 @@ export function ProductsPage() {
 
   return(
     <div>
+      <button><Link to={"/products/new"}>Create product</Link></button>
     <input type="text" value={search} onChange={(e) => setSearch(e.target.value)}/>
     {loading ? <p>Loading</p> : <table>
       <thead>

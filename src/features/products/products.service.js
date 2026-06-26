@@ -10,7 +10,12 @@ export async function getProductsById(id) {
   return res.data
 };
 
-export async function updateProduct(id, data){
+export async function updateProduct(id, data) {
   const res = await apiClient.put(`/products/${id}`, data)
   return res.data
+};
+
+export async function createProduct(data) {
+  const res = await apiClient.post("/products", data)
+  return res
 }
