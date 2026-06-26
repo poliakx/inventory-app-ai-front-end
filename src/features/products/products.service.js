@@ -19,3 +19,8 @@ export async function createProduct(data) {
   const res = await apiClient.post("/products", data)
   return res
 }
+
+export async function deleteProduct(id) {
+  const res = await apiClient.delete(`/products/${id}`)
+  return res
+}

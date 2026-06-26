@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getProducts } from "./products.service.js";
+import { deleteProduct, getProducts } from "./products.service.js";
 import { ProductCreatePage } from "./ProductCreatePage.jsx";
 
 export function ProductsPage() {
@@ -24,6 +24,11 @@ export function ProductsPage() {
     p => p.name.toLowerCase().includes(search.toLocaleLowerCase())
   );
 
+  async function handleDelete(id){
+    await deleteProduct(id)
+    setProducts(products.filter(item => item.id !== id))
+  }
+
   return(
     <div>
       <button><Link to={"/products/new"}>Create product</Link></button>
@@ -40,6 +45,7 @@ export function ProductsPage() {
         {filteredProducts.map(product => <tr key={product.id}>
          <td>
           <Link to={`/products/${product.id}`}>{product.name}</Link>
+          <button onClick={() => handleDelete(product.id)}>Delete</button>
           </td>
          <td>{product.price}</td>
          <td>{product.quantity}</td> 
