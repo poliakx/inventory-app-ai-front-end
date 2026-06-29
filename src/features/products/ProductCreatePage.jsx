@@ -1,5 +1,6 @@
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 import { createProduct } from "./products.service.js";
 
 export function ProductCreatePage(){
@@ -11,8 +12,10 @@ export function ProductCreatePage(){
     await createProduct({
       ...data,
       price: Number(data.price),
-      quantity: Number(data.quantity)
+      quantity: Number(data.quantity),
+      
     })
+    toast.success('Product created')
     navigate("/products")
   }
   return(

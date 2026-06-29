@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { getProducts } from "../products/products.service.js";
 import { createStockMovements, getMovementsByProductId } from "./stcok-movements.service.js";
+import { toast } from "sonner";
 
 export default function StockMovementsPage() {
 
@@ -37,6 +38,7 @@ export default function StockMovementsPage() {
         ...data,
         quantity: Number(data.quantity)
       })
+      toast.success('Movement added')
   } 
 
   return(

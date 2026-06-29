@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getCategories, createCategories, deleteCategories } from "./categories.service.js";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 export function CategoryPage() {
   const [category, setCategory] = useState(null)
@@ -18,14 +19,15 @@ export function CategoryPage() {
   }, [])
 
   async function onSubmit(data) {
-    const result =await createCategories(data)
-    console.log(result)
+    const result = await createCategories(data)
     setCategory([result.data, ...category])
+    toast.success('Category created')
   }
 
   async function onHandleDelete(id){
     await deleteCategories(id)
     setCategory(category.filter(item => item.id !== id))
+    toast.success('Category deleted')
   }
 
   if (loading) return <p>Loading...</p>

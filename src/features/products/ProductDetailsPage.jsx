@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import { useForm } from "react-hook-form"
 import { useEffect, useState } from "react";
 import { getProductsById, updateProduct } from "./products.service.js";
+import { toast } from "sonner";
 
 export  function ProductDetailsPage() {
 
@@ -34,6 +35,7 @@ export  function ProductDetailsPage() {
 
   async function onSubmit(data){
     await updateProduct(id, data)
+    toast.success('Product updated')
   }
 
   if(loading) return <p>loading...</p>

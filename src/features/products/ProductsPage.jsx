@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { deleteProduct, getProducts } from "./products.service.js";
-import { ProductCreatePage } from "./ProductCreatePage.jsx";
+import { toast } from "sonner";
 
 export function ProductsPage() {
 
@@ -27,6 +27,7 @@ export function ProductsPage() {
   async function handleDelete(id){
     await deleteProduct(id)
     setProducts(products.filter(item => item.id !== id))
+    toast.success('Product deleted')
   }
 
   return(

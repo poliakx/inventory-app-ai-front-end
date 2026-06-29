@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { Toaster } from 'sonner'
 
 import { getCurrentUser } from './features/auth/auth.service.js'
 import { useAuthStore } from './features/auth/authStore.js'
@@ -40,6 +41,7 @@ function App() {
 
   if (isAuthLoading) return null
   return (
+    <div>
     <BrowserRouter>
       <Routes>
         <Route element={<ProtectedRoute />}>
@@ -55,6 +57,8 @@ function App() {
         <Route path="/login" element ={<LoginPage/>} />  
       </Routes>
     </BrowserRouter>
+    <Toaster />
+    </div>
     )
 }
 
