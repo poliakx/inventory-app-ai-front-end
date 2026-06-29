@@ -13,6 +13,7 @@ import { DashboardPage } from './features/dashboard/DashboardPage.jsx'
 import { ProductsPage } from './features/products/ProductsPage.jsx'
 import { ProductDetailsPage } from './features/products/ProductDetailsPage.jsx'
 import { ProductCreatePage } from './features/products/ProductCreatePage.jsx'
+import StockMovementsPage from './features/stock-movements/StockMovementsPage.jsx'
 
 function App() {
 
@@ -48,6 +49,7 @@ function App() {
             <Route path="/products/new" element={<ProductCreatePage/>} />
             <Route path="/products/:id" element={<ProductDetailsPage/>}/>
             <Route path="/categories" element={<CategoryPage/>}/>
+            <Route path="/movements" element={<StockMovementsPage/>}/>
           </Route>
         </Route>
         <Route path="/login" element ={<LoginPage/>} />  

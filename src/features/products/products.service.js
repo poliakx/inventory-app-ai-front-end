@@ -8,6 +8,7 @@ export async function getProducts() {
 export async function getProductsById(id) {
     const res = await apiClient.get(`/products/${id}`)
   return res.data
+  
 };
 
 export async function updateProduct(id, data) {
