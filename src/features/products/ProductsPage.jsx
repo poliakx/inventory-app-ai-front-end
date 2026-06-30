@@ -1,20 +1,24 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { TableSkeleton } from "@/components/TableSkeleton.jsx";
 import { deleteProduct, getProducts } from "./products.service.js";
 import { toast } from "sonner";
 
 export function ProductsPage() {
 
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState("")
 
   useEffect(() => {
     async function fetchProducts(){
       setLoading(true)
-      const result = await getProducts()
-      setProducts(result.data.products)
-      setLoading(false)
+      try{
+        const result = await getProducts()
+        setProducts(result.data.products)
+      } finally{
+        setLoading(false)
+      }
     }
 
     fetchProducts()
@@ -29,12 +33,19 @@ export function ProductsPage() {
     setProducts(products.filter(item => item.id !== id))
     toast.success('Product deleted')
   }
-
+ 
+  if (loading) return (
+    <div>
+      <TableSkeleton rows={5}/>
+      </div>
+  )
+  
   return(
     <div>
       <button><Link to={"/products/new"}>Create product</Link></button>
     <input type="text" value={search} onChange={(e) => setSearch(e.target.value)}/>
-    {loading ? <p>Loading</p> : <table>
+    
+    <table>
       <thead>
         <tr>
           <th>Name</th>
@@ -42,6 +53,7 @@ export function ProductsPage() {
           <th>Quantity</th>
         </tr>
       </thead>
+     
       <tbody >
         {filteredProducts.map(product => <tr key={product.id}>
          <td>
@@ -52,7 +64,7 @@ export function ProductsPage() {
          <td>{product.quantity}</td> 
           </tr>)}
       </tbody>
-      </table>}
+      </table>
     </div>
   )
 }

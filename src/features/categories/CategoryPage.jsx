@@ -1,19 +1,23 @@
 import { useEffect, useState } from "react";
+import { TableSkeleton } from "@/components/TableSkeleton.jsx";
 import { getCategories, createCategories, deleteCategories } from "./categories.service.js";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 export function CategoryPage() {
   const [category, setCategory] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const { register, handleSubmit} = useForm()
 
   useEffect(() => {
     async function fetchCategory(){
-      setLoading(true)
-      const result = await getCategories()
-      setCategory(result.data)
-      setLoading(false)
+      try{
+        setLoading(true)
+        const result = await getCategories()
+        setCategory(result.data)
+      }finally{
+        setLoading(false)
+      }
     }
     fetchCategory()
   }, [])
@@ -29,8 +33,9 @@ export function CategoryPage() {
     setCategory(category.filter(item => item.id !== id))
     toast.success('Category deleted')
   }
-
-  if (loading) return <p>Loading...</p>
+  
+  if(loading) return <TableSkeleton rows={5} />
+  
   if (!category) return null 
 
   return(
