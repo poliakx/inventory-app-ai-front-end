@@ -38,6 +38,14 @@ export function CategoryPage() {
   
   if (!category) return null 
 
+  if (category.length === 0) return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+        <input type="text" {...register("name")}/>
+
+        <button type="submit">Create new category</button>
+        </form>
+  )
+
   return(
     <div>
       <form onSubmit={handleSubmit(onSubmit)}>

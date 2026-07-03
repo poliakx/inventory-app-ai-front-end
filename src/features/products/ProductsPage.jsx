@@ -39,11 +39,16 @@ export function ProductsPage() {
       <TableSkeleton rows={5}/>
       </div>
   )
-  
+  if(products.length === 0) return (<div>
+    <button><Link to={"/products/new"}>Create product</Link></button>
+  </div>)
   return(
     <div>
       <button><Link to={"/products/new"}>Create product</Link></button>
     <input type="text" value={search} onChange={(e) => setSearch(e.target.value)}/>
+
+    {filteredProducts.length === 0 
+      ? <p>No products found</p>:
     
     <table>
       <thead>
@@ -53,6 +58,8 @@ export function ProductsPage() {
           <th>Quantity</th>
         </tr>
       </thead>
+
+      
      
       <tbody >
         {filteredProducts.map(product => <tr key={product.id}>
@@ -65,6 +72,7 @@ export function ProductsPage() {
           </tr>)}
       </tbody>
       </table>
+}
     </div>
   )
 }
