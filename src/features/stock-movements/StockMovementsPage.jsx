@@ -3,6 +3,8 @@ import { useForm } from "react-hook-form";
 import { getProducts } from "../products/products.service.js";
 import { createStockMovements, getMovementsByProductId } from "./stcok-movements.service.js";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { TableSkeleton } from "@/components/TableSkeleton";
 
 export default function StockMovementsPage() {
 
@@ -10,7 +12,7 @@ export default function StockMovementsPage() {
   const [ loading, setLoading ] = useState(false)
   const [ selectedProductId, setSelectedProductId] = useState(null)
   const [ history, setHistory] = useState([])
-  const { register, handleSubmit } = useForm()
+  const { register, handleSubmit, reset } = useForm()
 
   useEffect(() =>{
     async function fetchProducts(){
@@ -18,13 +20,13 @@ export default function StockMovementsPage() {
       const result = await getProducts()
       setProducts(result.data.products)
       setLoading(false)
-    } 
+    }
     fetchProducts()
   }, [])
 
   useEffect(() =>{
     async function fetchMovementsHistory(){
-      if(!selectedProductId) return 
+      if(!selectedProductId) return
       setLoading(true)
       const result = await getMovementsByProductId(selectedProductId)
       setHistory(result.data)
@@ -39,48 +41,73 @@ export default function StockMovementsPage() {
         quantity: Number(data.quantity)
       })
       toast.success('Movement added')
-  } 
+      reset()
+  }
+
+  const selectClass = "h-9 rounded-md border border-input bg-transparent px-3 text-sm shadow-xs"
 
   return(
-    <div>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <select {...register("productId")}>
+    <div className="space-y-8">
+      <div className="space-y-1">
+        <h1 className="text-2xl font-semibold tracking-tight">Stock movements</h1>
+        <p className="text-sm text-muted-foreground">Record incoming and outgoing stock</p>
+      </div>
+
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-wrap items-center gap-2">
+        <select className={selectClass} {...register("productId")}>
           <option value="">Select product</option>
           {products.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
         </select>
-        <select {...register("type")}>
+        <select className={selectClass} {...register("type")}>
           <option value="in">In</option>
           <option value="out">Out</option>
         </select>
+        <input
+          type="number"
+          placeholder="Quantity"
+          className="h-9 w-28 rounded-md border border-input bg-transparent px-3 text-sm shadow-xs"
+          {...register('quantity')}
+        />
+        <Button type="submit">Add movement</Button>
+      </form>
 
-        <input type="number" {...register('quantity')} />
-        <button type="submit">Save</button>
-        </form>
+      <div className="space-y-3">
+        <select
+          className={selectClass}
+          onChange={(e) => setSelectedProductId(e.target.value)}
+          defaultValue=""
+        >
+          <option value="">Select product to view history</option>
+          {products.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+        </select>
 
-      <select onChange={(e) => setSelectedProductId(e.target.value)}>
-        <option>Select product</option>
-        {products.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
-      </select>
-      {loading ? <p>Loading</p> : <table>
-      <thead>
-        <tr>
-          <th>Product</th>
-          <th>Type</th>
-          <th>Quantity</th>
-          <th>Date</th>
-        </tr>
-      </thead>
-      <tbody >
-       {history.map(item => (
-        <tr key={item.id}>
-          <td>{item.type} </td>
-          <td>{item.quantity}</td>
-          <td>{item.createdAt}</td>
-        </tr>
-       ))}
-      </tbody>
-      </table>}
-      
+        {loading ? (
+          <TableSkeleton rows={5} />
+        ) : !selectedProductId ? null : history.length === 0 ? (
+          <p className="text-sm text-muted-foreground py-8">No movements recorded for this product</p>
+        ) : (
+          <div className="border rounded-lg overflow-hidden">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b bg-muted/50">
+                  <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Type</th>
+                  <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Quantity</th>
+                  <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {history.map(item => (
+                  <tr key={item.id} className="border-b last:border-0">
+                    <td className="px-4 py-3 capitalize">{item.type}</td>
+                    <td className="px-4 py-3">{item.quantity}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{item.createdAt}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </div>
   )
 }

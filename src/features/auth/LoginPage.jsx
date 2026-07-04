@@ -5,58 +5,80 @@ import { useAuthStore } from "./authStore.js";
 import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { login } from "./auth.service.js";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 
 const loginSchema = z.object({
-    email: z.string().email(),
-    password: z.string().min(6)
-  });
+  email: z.string().email(),
+  password: z.string().min(6)
+});
 
-export function LoginPage () {
+export function LoginPage() {
   const { setToken } = useAuthStore();
   const { register, handleSubmit, formState: { errors } } = useForm({ resolver: zodResolver(loginSchema) });
   const navigate = useNavigate();
 
-  async function onSubmit(data){
-    try{
-   const response = await login(data);
-    setToken(response.data.accessToken)
-    navigate('/dashboard')
-  } catch (error) {
-    console.error(error)
+  async function onSubmit(data) {
+    try {
+      const response = await login(data);
+      setToken(response.data.accessToken)
+      navigate('/dashboard')
+    } catch (error) {
+      console.error(error)
     }
-  };
+  }
 
   const token = useAuthStore((store) => store.token);
 
   useEffect(() => {
     if (token) navigate('/dashboard')
   }, [token])
-  return(
-    <div className="flex min-h-screen items-center justify-center">
-      <Card>
-        <CardHeader>
-          <CardTitle>Login</CardTitle>
-        </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div>
-            <Label>Email</Label>
-            <Input placeholder="email" {...register('email')} />
-            {errors.email && <span>{errors.email.message}</span>}
-          </div>
-        <div>
-            <Label>Password</Label>
-            <Input placeholder="password" {...register('password')}/>
-            {errors.password && <span>{errors.password.message}</span>}
-          </div>
-    <Button type="submit">Login</Button>
-  </form>
-      </CardContent>
-    </Card>
-  </div>
+
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-background">
+      <div className="w-full max-w-sm px-4">
+        <div className="mb-8 text-center">
+          <span className="text-lg font-semibold tracking-tight">Kitchen OS</span>
+        </div>
+        <Card className="border shadow-sm">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-xl">Sign in</CardTitle>
+            <CardDescription>Enter your credentials to continue</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              <div className="space-y-1.5">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  placeholder="name@restaurant.com"
+                  {...register('email')}
+                />
+                {errors.email && (
+                  <p className="text-sm text-destructive">{errors.email.message}</p>
+                )}
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="••••••••"
+                  {...register('password')}
+                />
+                {errors.password && (
+                  <p className="text-sm text-destructive">{errors.password.message}</p>
+                )}
+              </div>
+              <Button type="submit" className="w-full mt-2">
+                Sign in
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
   );
-};
+}
