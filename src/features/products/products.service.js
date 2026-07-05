@@ -18,10 +18,10 @@ export async function updateProduct(id, data) {
 
 export async function createProduct(data) {
   const res = await apiClient.post("/products", data)
-  return res
+  return res.data
 }
 
 export async function deleteProduct(id) {
   const res = await apiClient.delete(`/products/${id}`)
-  return res
+  return res.data
 }
