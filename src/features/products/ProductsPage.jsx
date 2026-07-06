@@ -1,40 +1,25 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useProducts, useDeleteProduct } from "./products.queries.js"
+
+
 import { Link } from "react-router-dom";
 import { TableSkeleton } from "@/components/TableSkeleton.jsx";
-import { deleteProduct, getProducts } from "./products.service.js";
-import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 export function ProductsPage() {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState("")
 
-  useEffect(() => {
-    async function fetchProducts() {
-      setLoading(true)
-      try {
-        const result = await getProducts()
-        setProducts(result.data.products)
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchProducts()
-  }, []);
+  const { data, isLoading } = useProducts()
+
+  const products = data?.data.products ?? []
 
   const filteredProducts = products.filter(
     p => p.name.toLowerCase().includes(search.toLowerCase())
   );
 
-  async function handleDelete(id) {
-    await deleteProduct(id)
-    setProducts(products.filter(item => item.id !== id))
-    toast.success('Product deleted')
-  }
-
-  if (loading) return <TableSkeleton rows={5} />
+  const deleteMutation = useDeleteProduct()
+  if (isLoading) return <TableSkeleton rows={5} />
 
   if (products.length === 0) return (
     <div className="flex flex-col items-center justify-center py-24 text-center">
@@ -86,7 +71,7 @@ export function ProductsPage() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => handleDelete(product.id)}
+                      onClick={() => deleteMutation.mutate(product.id)}
                       className="text-muted-foreground hover:text-destructive"
                     >
                       Delete

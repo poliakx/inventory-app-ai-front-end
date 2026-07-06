@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import { z } from "zod";
+import { useLoginMutation } from "./auth.queries.js";
 import { useForm } from "react-hook-form";
 import { useAuthStore } from "./authStore.js";
 import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { login } from "./auth.service.js";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -16,18 +16,13 @@ const loginSchema = z.object({
 });
 
 export function LoginPage() {
-  const { setToken } = useAuthStore();
   const { register, handleSubmit, formState: { errors } } = useForm({ resolver: zodResolver(loginSchema) });
   const navigate = useNavigate();
 
-  async function onSubmit(data) {
-    try {
-      const response = await login(data);
-      setToken(response.data.accessToken)
-      navigate('/dashboard')
-    } catch (error) {
-      console.error(error)
-    }
+  const loginMutation = useLoginMutation()
+
+  function onSubmit(data) {
+    loginMutation.mutate(data)
   }
 
   const token = useAuthStore((store) => store.token);
