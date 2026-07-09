@@ -1,47 +1,28 @@
-import { useEffect, useState } from "react";
 import { TableSkeleton } from "@/components/TableSkeleton.jsx";
-import { getCategories, createCategories, deleteCategories } from "./categories.service.js";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useCategories, useCreateCategories, useDeleteCategory } from "./categories.queries.js";
 
 export function CategoryPage() {
-  const [category, setCategory] = useState(null)
-  const [loading, setLoading] = useState(true)
   const { register, handleSubmit, reset } = useForm()
+  const{data, isLoading} = useCategories()
+  const categories = data?.data??[] 
 
-  useEffect(() => {
-    async function fetchCategory() {
-      try {
-        setLoading(true)
-        const result = await getCategories()
-        setCategory(result.data)
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchCategory()
-  }, [])
+  const createMutation = useCreateCategories()
 
-  async function onSubmit(data) {
-    const result = await createCategories(data)
-    setCategory([result.data, ...category])
-    toast.success('Category created')
+  function onSubmit(data) {
+    createMutation.mutate(data)
     reset()
   }
 
-  async function onHandleDelete(id) {
-    await deleteCategories(id)
-    setCategory(category.filter(item => item.id !== id))
-    toast.success('Category deleted')
-  }
+  const deleteMutation = useDeleteCategory()
 
-  if (loading) return <TableSkeleton rows={5} />
+  if (isLoading) return <TableSkeleton rows={5} />
 
-  if (!category) return null
+  if (!categories) return null
 
-  if (category.length === 0) return (
+  if (categories.length === 0) return (
     <div className="space-y-6">
       <h1 className="text-2xl font-semibold tracking-tight">Categories</h1>
       <div className="flex flex-col items-center justify-center py-16 text-center space-y-4">
@@ -70,14 +51,14 @@ export function CategoryPage() {
             </tr>
           </thead>
           <tbody>
-            {category.map(cat => (
+            {categories.map(cat => (
               <tr key={cat.id} className="border-b last:border-0 hover:bg-muted/50 transition-colors">
                 <td className="px-4 py-3 font-medium">{cat.name}</td>
                 <td className="px-4 py-3 text-right">
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => onHandleDelete(cat.id)}
+                    onClick={() => deleteMutation.mutate(cat.id)}
                     className="text-muted-foreground hover:text-destructive"
                   >
                     Delete

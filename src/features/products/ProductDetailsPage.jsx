@@ -1,54 +1,43 @@
 import { useParams, Link } from "react-router-dom";
 import { useForm } from "react-hook-form"
-import { useEffect, useState } from "react";
-import { getProductsById, updateProduct } from "./products.service.js";
-import { toast } from "sonner";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { TableSkeleton } from "@/components/TableSkeleton";
+import { useProduct, useUpdateProduct } from "./products.queries.js";
 
 export function ProductDetailsPage() {
   const { id } = useParams()
-  const [loading, setLoading] = useState(true)
-  const [product, setProduct] = useState(null)
   const { register, handleSubmit, reset } = useForm()
 
-  useEffect(() => {
-    async function fetchProductById(id) {
-      setLoading(true)
-      try {
-        const result = await getProductsById(id)
-        setProduct(result)
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchProductById(id)
-  }, [])
+  const {data, isLoading } = useProduct(id)
+
+  const product = data ?. data ?? null
 
   useEffect(() => {
     if (product) {
       reset({
-        name: product.data.name,
-        price: product.data.price,
-        quantity: product.data.quantity
+        name: product.name,
+        price: product.price,
+        quantity: product.quantity
       })
     }
   }, [product])
 
-  async function onSubmit(data) {
-    await updateProduct(id, data)
-    toast.success('Product updated')
+  const updateMutation = useUpdateProduct()
+
+   function onSubmit(data) {
+     updateMutation.mutate({id, data})
   }
 
-  if (loading) return <TableSkeleton rows={3} />
+  if (isLoading) return <TableSkeleton rows={3} />
   if (!product) return null
 
   return (
     <div className="max-w-md space-y-6">
       <div className="space-y-1">
-        <h1 className="text-2xl font-semibold tracking-tight">{product.data.name}</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">{product.name}</h1>
         <p className="text-sm text-muted-foreground">Edit product details</p>
       </div>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">

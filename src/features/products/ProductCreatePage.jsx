@@ -1,23 +1,24 @@
 import { useForm } from "react-hook-form";
 import { useNavigate, Link } from "react-router-dom";
-import { toast } from "sonner";
-import { createProduct } from "./products.service.js";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useCreateProducts } from "./products.queries.js";
 
 export function ProductCreatePage() {
   const { register, handleSubmit } = useForm()
   const navigate = useNavigate()
 
-  async function onHandleSubmit(data) {
-    await createProduct({
+  const createMutation = useCreateProducts()
+
+  function onHandleSubmit(data) {
+     createMutation.mutate({
       ...data,
       price: Number(data.price),
       quantity: Number(data.quantity),
+    }, {
+      onSuccess: () => navigate("/products")
     })
-    toast.success('Product created')
-    navigate("/products")
   }
 
   return (

@@ -1,46 +1,24 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { getProducts } from "../products/products.service.js";
-import { createStockMovements, getMovementsByProductId } from "./stcok-movements.service.js";
-import { toast } from "sonner";
+import { useProducts } from "../products/products.queries.js";
 import { Button } from "@/components/ui/button";
 import { TableSkeleton } from "@/components/TableSkeleton";
+import { useCreateStockMovement, useStockMovements } from "./stock-movements.queries.js";
 
 export default function StockMovementsPage() {
 
-  const [ products, setProducts ] = useState([])
-  const [ loading, setLoading ] = useState(false)
   const [ selectedProductId, setSelectedProductId] = useState(null)
-  const [ history, setHistory] = useState([])
   const { register, handleSubmit, reset } = useForm()
+  const { data: stockMovementsData, isLoading: stockMovementsLoading} = useStockMovements(selectedProductId)
+  const { data: productsData, isLoading: productsLoading} = useProducts()
 
-  useEffect(() =>{
-    async function fetchProducts(){
-      setLoading(true)
-      const result = await getProducts()
-      setProducts(result.data.products)
-      setLoading(false)
-    }
-    fetchProducts()
-  }, [])
+  const movements =stockMovementsData?.data??[]
+  const products = productsData?.data.products??[]
 
-  useEffect(() =>{
-    async function fetchMovementsHistory(){
-      if(!selectedProductId) return
-      setLoading(true)
-      const result = await getMovementsByProductId(selectedProductId)
-      setHistory(result.data)
-      setLoading(false)
-    }
-    fetchMovementsHistory()
-  }, [selectedProductId])
+  const createMutation = useCreateStockMovement()
 
   async function onSubmit(data){
-      await createStockMovements({
-        ...data,
-        quantity: Number(data.quantity)
-      })
-      toast.success('Movement added')
+     createMutation.mutate(data)
       reset()
   }
 
@@ -66,7 +44,7 @@ export default function StockMovementsPage() {
           type="number"
           placeholder="Quantity"
           className="h-9 w-28 rounded-md border border-input bg-transparent px-3 text-sm shadow-xs"
-          {...register('quantity')}
+          {...register('quantity', {valueAsNumber: true})}
         />
         <Button type="submit">Add movement</Button>
       </form>
@@ -81,9 +59,9 @@ export default function StockMovementsPage() {
           {products.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
         </select>
 
-        {loading ? (
+        {productsLoading || stockMovementsLoading ? (
           <TableSkeleton rows={5} />
-        ) : !selectedProductId ? null : history.length === 0 ? (
+        ) : !selectedProductId ? null :  movements.length === 0 ? (
           <p className="text-sm text-muted-foreground py-8">No movements recorded for this product</p>
         ) : (
           <div className="border rounded-lg overflow-hidden">
@@ -96,7 +74,7 @@ export default function StockMovementsPage() {
                 </tr>
               </thead>
               <tbody>
-                {history.map(item => (
+                {movements.map(item => (
                   <tr key={item.id} className="border-b last:border-0">
                     <td className="px-4 py-3 capitalize">{item.type}</td>
                     <td className="px-4 py-3">{item.quantity}</td>

@@ -1,33 +1,18 @@
-import { useEffect, useState } from "react"
-import { getProducts } from "@/features/products/products.service";
-import { getCategories } from "@/features/categories/categories.service";
+import { useProducts } from "../products/products.queries.js";
+import { useCategories } from "../categories/categories.queries.js";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TableSkeleton } from "@/components/TableSkeleton";
 
 export function DashboardPage() {
-  const [products, setProducts] = useState([])
-  const [categories, setCategories] = useState([])
-  const [loading, setLoading] = useState(true)
+  const {data: productData, isLoading: productLoading} = useProducts()
+  const {data: categoriesData, isLoading: categoriesLoading} = useCategories()
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const [productsRes, categoriesRes] = await Promise.all([
-          getProducts(),
-          getCategories(),
-        ])
-        setProducts(productsRes.data.products)
-        setCategories(categoriesRes.data)
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchData()
-  }, [])
+  const products = productData?.data.products ?? [] 
+  const categories = categoriesData?.data ?? [] 
 
   const lowStock = products.filter(p => p.quantity < 10)
 
-  if (loading) return <TableSkeleton rows={3} />
+  if (productLoading || categoriesLoading) return <TableSkeleton rows={3} />
 
   const stats = [
     { label: 'Total products', value: products.length },
