@@ -3,20 +3,21 @@ import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { productSchema } from "./products.schema.js";
 import { useCreateProducts } from "./products.queries.js";
+import { zodResolver } from "@hookform/resolvers/zod";
+
 
 export function ProductCreatePage() {
-  const { register, handleSubmit } = useForm()
+  const { register, handleSubmit, formState: { errors} } = useForm({
+    resolver: zodResolver(productSchema)
+  })
   const navigate = useNavigate()
 
   const createMutation = useCreateProducts()
 
   function onHandleSubmit(data) {
-     createMutation.mutate({
-      ...data,
-      price: Number(data.price),
-      quantity: Number(data.quantity),
-    }, {
+     createMutation.mutate(data, {
       onSuccess: () => navigate("/products")
     })
   }
@@ -31,14 +32,17 @@ export function ProductCreatePage() {
         <div className="space-y-1.5">
           <Label htmlFor="name">Name</Label>
           <Input id="name" placeholder="e.g. Tomatoes" {...register("name")} />
+           {errors.name && <p className="text-sm text-destructive">{errors.name.message}</p>}
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="price">Price</Label>
           <Input id="price" type="number" step="any" placeholder="0.00" {...register("price")} />
+           {errors.price && <p className="text-sm text-destructive">{errors.price.message}</p>}
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="quantity">Quantity</Label>
           <Input id="quantity" type="number" placeholder="0" {...register("quantity")} />
+           {errors.quantity && <p className="text-sm text-destructive">{errors.quantity.message}</p>}
         </div>
         <div className="flex gap-3 pt-2">
           <Button type="submit">Create product</Button>

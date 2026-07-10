@@ -15,6 +15,7 @@ import { ProductsPage } from './features/products/ProductsPage.jsx'
 import { ProductDetailsPage } from './features/products/ProductDetailsPage.jsx'
 import { ProductCreatePage } from './features/products/ProductCreatePage.jsx'
 import StockMovementsPage from './features/stock-movements/StockMovementsPage.jsx'
+import { ErrorBoundary } from './components/ErrorBoundary.jsx'
 
 function App() {
 
@@ -42,21 +43,23 @@ function App() {
   if (isAuthLoading) return null
   return (
     <div>
-    <BrowserRouter>
-      <Routes>
-        <Route element={<ProtectedRoute />}>
-          <Route element={<AppLayout/>}>
-            <Route path="/dashboard" element={<DashboardPage/>} />
-            <Route path="/products" element={<ProductsPage/>} />
-            <Route path="/products/new" element={<ProductCreatePage/>} />
-            <Route path="/products/:id" element={<ProductDetailsPage/>}/>
-            <Route path="/categories" element={<CategoryPage/>}/>
-            <Route path="/movements" element={<StockMovementsPage/>}/>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <Routes>
+          <Route element={<ProtectedRoute />}>
+            <Route element={<AppLayout/>}>
+              <Route path="/dashboard" element={<DashboardPage/>} />
+              <Route path="/products" element={<ProductsPage/>} />
+              <Route path="/products/new" element={<ProductCreatePage/>} />
+              <Route path="/products/:id" element={<ProductDetailsPage/>}/>
+              <Route path="/categories" element={<CategoryPage/>}/>
+              <Route path="/movements" element={<StockMovementsPage/>}/>
+            </Route>
           </Route>
-        </Route>
-        <Route path="/login" element ={<LoginPage/>} />  
-      </Routes>
-    </BrowserRouter>
+          <Route path="/login" element ={<LoginPage/>} />  
+        </Routes>
+      </BrowserRouter>
+    </ErrorBoundary>
     <Toaster />
     </div>
     )

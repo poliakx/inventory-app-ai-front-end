@@ -5,11 +5,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { TableSkeleton } from "@/components/TableSkeleton";
+import { productSchema } from "./products.schema.js";
 import { useProduct, useUpdateProduct } from "./products.queries.js";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export function ProductDetailsPage() {
   const { id } = useParams()
-  const { register, handleSubmit, reset } = useForm()
+  const { register, handleSubmit, reset, formState: {errors} } = useForm({
+    resolver: zodResolver(productSchema)
+  })
 
   const {data, isLoading } = useProduct(id)
 
@@ -44,14 +48,17 @@ export function ProductDetailsPage() {
         <div className="space-y-1.5">
           <Label htmlFor="name">Name</Label>
           <Input id="name" {...register("name")} />
+          {errors.name && <p className="text-sm text-destructive">{errors.name.message}</p>}
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="price">Price</Label>
           <Input id="price" type="number" step="any" {...register("price")} />
+          {errors.price && <p className="text-sm text-destructive">{errors.price.message}</p>}
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="quantity">Quantity</Label>
           <Input id="quantity" type="number" {...register("quantity")} />
+          {errors.quantity && <p className="text-sm text-destructive">{errors.quantity.message}</p>}
         </div>
         <div className="flex gap-3 pt-2">
           <Button type="submit">Save changes</Button>

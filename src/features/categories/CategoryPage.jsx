@@ -2,10 +2,18 @@ import { TableSkeleton } from "@/components/TableSkeleton.jsx";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useCategories, useCreateCategories, useDeleteCategory } from "./categories.queries.js";
 
+const categorySchema = z.object({
+    name: z.string().min(1, "Name is required")
+  })
+
 export function CategoryPage() {
-  const { register, handleSubmit, reset } = useForm()
+  const { register, handleSubmit, reset, formState: { errors } } = useForm({ 
+  resolver: zodResolver(categorySchema) 
+})
   const{data, isLoading} = useCategories()
   const categories = data?.data??[] 
 
@@ -29,6 +37,7 @@ export function CategoryPage() {
         <p className="text-sm text-muted-foreground">No categories yet. Create your first one.</p>
         <form onSubmit={handleSubmit(onSubmit)} className="flex gap-2">
           <Input placeholder="Category name..." {...register("name")} className="w-64" />
+           {errors.name && <p className="text-sm text-destructive">{errors.name.message}</p>}
           <Button type="submit">Add</Button>
         </form>
       </div>
@@ -40,6 +49,7 @@ export function CategoryPage() {
       <h1 className="text-2xl font-semibold tracking-tight">Categories</h1>
       <form onSubmit={handleSubmit(onSubmit)} className="flex gap-2 max-w-sm">
         <Input placeholder="New category..." {...register("name")} />
+         {errors.name && <p className="text-sm text-destructive">{errors.name.message}</p>}
         <Button type="submit">Add</Button>
       </form>
       <div className="border rounded-lg overflow-hidden">
