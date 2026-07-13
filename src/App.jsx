@@ -10,6 +10,7 @@ import { ProtectedRoute } from './components/ProtectedRoute.jsx'
 
 import { CategoryPage } from './features/categories/CategoryPage.jsx'
 import { LoginPage } from './features/auth/LoginPage.jsx'
+import { RegisterPage } from './features/auth/RegisterPage.jsx'
 import { DashboardPage } from './features/dashboard/DashboardPage.jsx'
 import { ProductsPage } from './features/products/ProductsPage.jsx'
 import { ProductDetailsPage } from './features/products/ProductDetailsPage.jsx'
@@ -57,7 +58,8 @@ function App() {
               <Route path="/movements" element={<StockMovementsPage/>}/>
             </Route>
           </Route>
-          <Route path="/login" element ={<LoginPage/>} />  
+          <Route path="/login" element ={<LoginPage/>} />
+          <Route path="/register" element={<RegisterPage/>} />
         </Routes>
       </BrowserRouter>
     </ErrorBoundary>

@@ -1,33 +1,21 @@
-import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useLoginMutation } from "./auth.queries.js";
+import { useRegisterMutation } from "./auth.queries.js";
 import { useForm } from "react-hook-form";
-import { useAuthStore } from "./authStore.js";
-import { loginSchema } from "./auth.schema.js"; 
-import { useNavigate } from "react-router-dom";
+import { registerSchema } from "./auth.schema.js";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 
+export function RegisterPage() {
+  const { register, handleSubmit, formState: { errors } } = useForm({ resolver: zodResolver(registerSchema) });
 
-
-export function LoginPage() {
-  const { register, handleSubmit, formState: { errors } } = useForm({ resolver: zodResolver(loginSchema) });
-  const navigate = useNavigate();
-
-  const loginMutation = useLoginMutation()
+  const registerMutation = useRegisterMutation()
 
   function onSubmit(data) {
-    loginMutation.mutate(data)
+    registerMutation.mutate(data)
   }
-
-  const token = useAuthStore((store) => store.token);
-
-  useEffect(() => {
-    if (token) navigate('/dashboard')
-  }, [token])
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background">
@@ -37,11 +25,22 @@ export function LoginPage() {
         </div>
         <Card className="border shadow-sm">
           <CardHeader className="pb-4">
-            <CardTitle className="text-xl">Sign in</CardTitle>
-            <CardDescription>Enter your credentials to continue</CardDescription>
+            <CardTitle className="text-xl">Create account</CardTitle>
+            <CardDescription>Set up your organization to get started</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              <div className="space-y-1.5">
+                <Label htmlFor="name">Name</Label>
+                <Input
+                  id="name"
+                  placeholder="Your name"
+                  {...register('name')}
+                />
+                {errors.name && (
+                  <p className="text-sm text-destructive">{errors.name.message}</p>
+                )}
+              </div>
               <div className="space-y-1.5">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -65,14 +64,25 @@ export function LoginPage() {
                   <p className="text-sm text-destructive">{errors.password.message}</p>
                 )}
               </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="organizationName">Organization name</Label>
+                <Input
+                  id="organizationName"
+                  placeholder="e.g. Kitchen OS Restaurant"
+                  {...register('organizationName')}
+                />
+                {errors.organizationName && (
+                  <p className="text-sm text-destructive">{errors.organizationName.message}</p>
+                )}
+              </div>
               <Button type="submit" className="w-full mt-2">
-                Sign in
+                Create account
               </Button>
             </form>
             <p className="text-sm text-muted-foreground text-center mt-4">
-              Don't have an account?{" "}
-              <Link to="/register" className="text-foreground hover:underline">
-                Create one
+              Already have an account?{" "}
+              <Link to="/login" className="text-foreground hover:underline">
+                Sign in
               </Link>
             </p>
           </CardContent>
