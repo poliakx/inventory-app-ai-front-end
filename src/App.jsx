@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom'
 import { Toaster } from 'sonner'
 
 import { getCurrentUser } from './features/auth/auth.service.js'
@@ -48,6 +48,7 @@ function App() {
         <Routes>
           <Route element={<ProtectedRoute />}>
             <Route element={<AppLayout/>}>
+              <Route path="/" element={<Navigate to="/dashboard" replace />} />
               <Route path="/dashboard" element={<DashboardPage/>} />
               <Route path="/products" element={<ProductsPage/>} />
               <Route path="/products/new" element={<ProductCreatePage/>} />
