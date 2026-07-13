@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useAuthStore } from '@/features/auth/authStore';
 
-export const apiClient = axios.create({ baseURL: '/api' })
+export const apiClient = axios.create({ baseURL: import.meta.env.VITE_API_URL || '/api' })
 
   apiClient.interceptors.request.use((config) => {
     const raw = localStorage.getItem('auth-storage')
