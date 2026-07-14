@@ -1,14 +1,15 @@
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { useProducts } from "../products/products.queries.js";
 import { Button } from "@/components/ui/button";
 import { TableSkeleton } from "@/components/TableSkeleton";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useCreateStockMovement, useStockMovements } from "./stock-movements.queries.js";
 
 export default function StockMovementsPage() {
 
   const [ selectedProductId, setSelectedProductId] = useState(null)
-  const { register, handleSubmit, reset } = useForm()
+  const { register, control, handleSubmit, reset } = useForm()
   const { data: stockMovementsData, isLoading: stockMovementsLoading} = useStockMovements(selectedProductId)
   const { data: productsData, isLoading: productsLoading} = useProducts()
 
@@ -22,8 +23,6 @@ export default function StockMovementsPage() {
       reset()
   }
 
-  const selectClass = "h-9 rounded-md border border-input bg-transparent px-3 text-sm shadow-xs"
-
   return(
     <div className="space-y-8">
       <div className="space-y-1">
@@ -32,14 +31,38 @@ export default function StockMovementsPage() {
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-wrap items-center gap-2">
-        <select className={selectClass} {...register("productId")}>
-          <option value="">Select product</option>
-          {products.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
-        </select>
-        <select className={selectClass} {...register("type")}>
-          <option value="in">In</option>
-          <option value="out">Out</option>
-        </select>
+        <Controller
+          control={control}
+          name="productId"
+          render={({ field }) => (
+            <Select onValueChange={field.onChange} value={field.value}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select product" />
+              </SelectTrigger>
+              <SelectContent>
+                {products.map(p => (
+                  <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+        />
+        <Controller
+          control={control}
+          name="type"
+          defaultValue="in"
+          render={({ field }) => (
+            <Select onValueChange={field.onChange} value={field.value}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="in">In</SelectItem>
+                <SelectItem value="out">Out</SelectItem>
+              </SelectContent>
+            </Select>
+          )}
+        />
         <input
           type="number"
           placeholder="Quantity"
@@ -50,14 +73,16 @@ export default function StockMovementsPage() {
       </form>
 
       <div className="space-y-3">
-        <select
-          className={selectClass}
-          onChange={(e) => setSelectedProductId(e.target.value)}
-          defaultValue=""
-        >
-          <option value="">Select product to view history</option>
-          {products.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
-        </select>
+        <Select onValueChange={setSelectedProductId} value={selectedProductId ?? undefined}>
+          <SelectTrigger>
+            <SelectValue placeholder="Select product to view history" />
+          </SelectTrigger>
+          <SelectContent>
+            {products.map(p => (
+              <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
 
         {productsLoading || stockMovementsLoading ? (
           <TableSkeleton rows={5} />
