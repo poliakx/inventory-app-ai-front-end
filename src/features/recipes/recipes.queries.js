@@ -18,7 +18,7 @@ export const useRecipe = (id) => {
   })
 }
 
-export const useCreate = () => {
+export const useCreateRecipe = () => {
   return useMutation({
     mutationFn: createRecipe,
     onSuccess: () => {
@@ -28,7 +28,7 @@ export const useCreate = () => {
   })
 }
 
-export const useUpdate = () => {
+export const useUpdateRecipe = () => {
 return useMutation({
   mutationFn: ({id, data}) => updateRecipe(id, data),
   onSuccess: () => {
@@ -38,7 +38,7 @@ return useMutation({
 })
 }
 
-export const useDelete = () => {
+export const useDeleteRecipe = () => {
   return useMutation({
     mutationFn: deleteRecipe,
     onSuccess: () => {

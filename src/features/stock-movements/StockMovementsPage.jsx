@@ -13,7 +13,7 @@ export default function StockMovementsPage() {
   const { data: stockMovementsData, isLoading: stockMovementsLoading} = useStockMovements(selectedProductId)
   const { data: productsData, isLoading: productsLoading} = useProducts()
 
-  const movements =stockMovementsData?.data??[]
+  const movements = stockMovementsData?.data??[]
   const products = productsData?.data.products??[]
 
   const createMutation = useCreateStockMovement()
