@@ -47,7 +47,7 @@ _(watch for these, calibrate review depth accordingly — update as patterns cha
 
 ## Current Priorities
 1. Close out remaining Phase 0 polish items (see PRODUCT_SPEC.md roadmap)
-2. Recipes frontend — blocked until backend recipes issues are resolved (see backend CLAUDE.md open issues)
+2. Recipes frontend — backend is done and tested (`back-end` repo, branch `chore/update-readme`; see `../product/RECIPES_FRONTEND_BRIEF.md` for full handoff context). Starting now.
 
 ## End of Session Checklist
 
