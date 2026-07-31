@@ -2,6 +2,8 @@ import { useFieldArray, useForm, Controller } from "react-hook-form";
 import { useNavigate, Link } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Button } from "@/components/ui/button.jsx";
+
 import { recipeSchema } from "./recipe.schema.js";
 import { useCreateRecipe } from "./recipes.queries.js";
 import { useProducts } from "../products/products.queries.js";
@@ -48,6 +50,34 @@ export function RecipeCreatePage() {
         )}
       >
       </Controller>
+
+      
+      {fields.map((item, index) => (
+        <div key={item.id}>
+          <Controller
+      name={`ingredients.${index}.productId`}
+      control={control}
+      render={({field}) => (
+        <Select onValueChange = {field.onChange} value = {field.value}>
+          <SelectTrigger>
+            <SelectValue placeholder="Select product"/>
+          </SelectTrigger>
+          <SelectContent>
+            {products.map(p =>(
+              <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
+          ))}
+          </SelectContent>
+        </Select>
+      )}
+      >
+        
+      </Controller>
+        </div>
+      ))}
+
+      <Button type="button" onClick={() => append({ productId: "", quantity: "" })}>
+        Add ingredient
+      </Button>
     </form>
   )
 }
