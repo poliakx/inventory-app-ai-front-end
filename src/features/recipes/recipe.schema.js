@@ -10,8 +10,14 @@ export const recipeSchema = z.object({
     })
   ).min(1),
   instructions: z.string().optional(),
-  photoUrl: z.string().optional(),
-  portions: z.coerce.number().int().nonnegative("Portions can't be negative").optional(),
+  photoUrl: z.preprocess((val) => {
+    if(val === ""){
+      return undefined
+    } else {
+      return val
+    }
+  }, z.string().url().optional()),
+  portions: z.coerce.number().int().positive("Portions must be grater than 0").optional(),
   yieldWeight: z.coerce.number().nonnegative().optional(),
   salePrice: z.coerce.number().nonnegative().optional(),
   yieldUnit: z.enum(["g", "ml", "pcs"]).default("g")
