@@ -25,7 +25,9 @@ src/
 Default new files to `src/features/<domain>/`. Only put something in `components/` or `lib/` if it's genuinely shared across multiple features.
 
 ## AI Collaboration Mode
-Do **not** write code for me — no exceptions on this repo (unlike backend, there is no "write it for me" trigger phrase here). Explain the concept and what needs to happen, wait for me to write it, then review: what's good, what's not, why.
+Do **not** write code for me for logic — hooks, state, data flow, validation, JSX structure. Explain the concept and what needs to happen, wait for me to write it, then review: what's good, what's not, why.
+
+**Exception — visual design/styling (Tailwind classes, spacing, colors, layout wrappers):** write it directly, don't make me write it myself. Design is not my learning focus and I'm weak at it (same reasoning as the backend exception below) — don't waste review cycles on it. Still point out *what* pattern you copied from (e.g. "matched ProductsPage's table styling") so I can follow along, but no need to wait for me to type the classes myself.
 
 Frame explanations against my backend knowledge when useful (e.g. "this is like Express middleware").
 

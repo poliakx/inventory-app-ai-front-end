@@ -18,6 +18,7 @@ import { ProductCreatePage } from './features/products/ProductCreatePage.jsx'
 import StockMovementsPage from './features/stock-movements/StockMovementsPage.jsx'
 import { ErrorBoundary } from './components/ErrorBoundary.jsx'
 import { RecipeCreatePage } from './features/recipes/RecipeCreatePage.jsx'
+import { RecipesPage } from './features/recipes/RecipesPage.jsx'
 
 function App() {
 
@@ -57,6 +58,7 @@ function App() {
               <Route path="/products/:id" element={<ProductDetailsPage/>}/>
               <Route path="/categories" element={<CategoryPage/>}/>
               <Route path="/movements" element={<StockMovementsPage/>}/>
+              <Route path ="/recipes" element={<RecipesPage/>}/>
               <Route path="/recipes/new" element={<RecipeCreatePage/>} />
             </Route>
           </Route>
