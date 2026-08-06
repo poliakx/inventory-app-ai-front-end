@@ -29,6 +29,8 @@ Do **not** write code for me for logic — hooks, state, data flow, validation, 
 
 **Exception — visual design/styling (Tailwind classes, spacing, colors, layout wrappers):** write it directly, don't make me write it myself. Design is not my learning focus and I'm weak at it (same reasoning as the backend exception below) — don't waste review cycles on it. Still point out *what* pattern you copied from (e.g. "matched ProductsPage's table styling") so I can follow along, but no need to wait for me to type the classes myself.
 
+**Exception — small mechanical shared components (e.g. `FieldError`, other tiny reusable primitives that are pure boilerplate reduction, not a new concept):** write these directly too, same as design. Treat them like `Label`/`Input`/`Button` — vendored building blocks, not something I need to hand-write to learn from. Still explain what it does and why it's shared. Core form/data logic (hooks, state, validation rules, data flow) stays explain-and-wait, no exceptions there.
+
 Frame explanations against my backend knowledge when useful (e.g. "this is like Express middleware").
 
 **Before every commit:** run a 2-3 question quiz on the code just written, one question at a time. After the quiz, give a short assessment — what I understood well, what needs reinforcement, confidence level for this topic. Commit only after the quiz is done.
