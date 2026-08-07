@@ -23,6 +23,7 @@ export function RecipeCreatePage() {
     handleSubmit,
     control,
     register,
+    watch,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(recipeSchema),
@@ -45,6 +46,22 @@ export function RecipeCreatePage() {
 
   const categories = categoriesData?.data ?? [];
   const products = productsData?.data.products ?? [];
+  const watchedIngredients = watch("ingredients");
+  const watchedSalePrice = watch("salePrice");
+
+  const liveFoodCost = watchedIngredients.reduce((sum, acc) => {
+    const product = products.find((p) => p.id === acc.productId);
+    if (!product) {
+      return sum;
+    }
+    return sum + product.price * acc.quantity;
+  }, 0);
+
+  const liveFoodCostPercentage = () => {
+    if (Number.isNaN(Number(watchedSalePrice)) || Number(watchedSalePrice) <= 0)
+      return null;
+    return (liveFoodCost / watchedSalePrice) * 100;
+  };
 
   function onHandleSubmit(data) {
     createMutation.mutate(data, {
@@ -163,6 +180,13 @@ export function RecipeCreatePage() {
         <Label htmlFor="salePrice">Sale price</Label>
         <Input id="salePrice" type="number" {...register("salePrice")} />
         <FieldError error={errors.salePrice} />
+      </div>
+
+      <div>
+        <Label htmlFor="foodCost">Food cost: {liveFoodCost}</Label>
+        <Label htmlFor="foodCostPercentage">
+          Food cost percentage: {liveFoodCostPercentage()}
+        </Label>
       </div>
 
       <Button type="submit" disabled={createMutation.isPending}>
