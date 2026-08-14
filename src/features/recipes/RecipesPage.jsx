@@ -89,13 +89,15 @@ export function RecipesPage() {
                     {recipe.portions}
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">
-                    {recipe.foodCost}
+                    {recipe.foodCost != null ? Number(recipe.foodCost).toFixed(2) : "—"}
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">
-                    {recipe.foodCostPercentage}
+                    {recipe.foodCostPercentage != null
+                      ? `${Number(recipe.foodCostPercentage).toFixed(1)}%`
+                      : "—"}
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">
-                    {recipe.salePrice}
+                    {recipe.salePrice != null ? Number(recipe.salePrice).toFixed(2) : "—"}
                   </td>
                   <td className="px-4 py-3 text-right">
                     <Button

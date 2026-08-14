@@ -8,7 +8,7 @@ export const useCreateStockMovement = () => {
     mutationFn: createStockMovements,
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: ['stockMovements']})
-      toast.success('Movements added')
+      toast.success('Stock movement recorded')
     }
   })
 }

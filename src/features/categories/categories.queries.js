@@ -15,7 +15,7 @@ export const useCreateCategories = () => {
     mutationFn: createCategories,
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey:['/categories']})
-      toast.success('Category create')
+      toast.success('Category created')
     }
   })
 }
