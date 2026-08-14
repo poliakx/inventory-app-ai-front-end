@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { TableSkeleton } from "@/components/TableSkeleton.jsx";
 
 export function RecipesPage() {
+  // TODO: wire up pagination — backend already supports page/limit (see recipes.service.js)
+  // eslint-disable-next-line no-unused-vars
   const [page, setPage] = useState();
   const [search, setSearch] = useState("");
   const { data, isLoading } = useRecipes();

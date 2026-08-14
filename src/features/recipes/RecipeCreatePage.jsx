@@ -1,5 +1,5 @@
 import { useFieldArray, useForm, Controller } from "react-hook-form";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Select,
@@ -189,7 +189,10 @@ export function RecipeCreatePage() {
         </Label>
       </div>
 
-      <Button type="submit" disabled={createMutation.isPending}>
+      <Button
+        type="submit"
+        disabled={createMutation.isPending || isLoading || productsLoading}
+      >
         {createMutation.isPending ? "Creating..." : "Create recipe"}
       </Button>
     </form>

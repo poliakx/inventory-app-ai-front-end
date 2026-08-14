@@ -1,4 +1,3 @@
-import * as React from "react"
 import { cva } from "class-variance-authority";
 import { Slot } from "radix-ui"
 
@@ -60,4 +59,7 @@ function Button({
   );
 }
 
+// buttonVariants is a non-component export alongside a component — standard
+// shadcn generated-file pattern, not something to restructure by hand.
+// eslint-disable-next-line react-refresh/only-export-components
 export { Button, buttonVariants }
