@@ -11,7 +11,7 @@ export const recipeSchema = z.object({
   ).min(1),
   instructions: z.string().optional(),
   photoUrl: z.preprocess((val) => {
-    if(val === ""){
+    if(val === "" || val === null){
       return undefined
     } else {
       return val

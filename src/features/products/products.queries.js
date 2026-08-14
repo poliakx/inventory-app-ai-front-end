@@ -1,7 +1,8 @@
 import { useQuery, useMutation } from "@tanstack/react-query"
 import { toast } from "sonner"
-import { getProducts, deleteProduct, createProduct, updateProduct, getProductsById } from "./products.service.js"
 import { queryClient } from "@/lib/queryClient.js"
+import { getProducts, deleteProduct, createProduct, updateProduct, getProductsById } from "./products.service.js"
+
 
 export function useProducts() {
   return useQuery({
