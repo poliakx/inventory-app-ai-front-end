@@ -13,6 +13,7 @@ export const useLoginMutation = () => {
     onSuccess: (response) => {
       setToken(response.data.accessToken)
       navigate('/dashboard')
+      toast.success("Signed in")
     }
   })
 }

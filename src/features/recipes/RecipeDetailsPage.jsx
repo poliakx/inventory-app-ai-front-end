@@ -94,7 +94,15 @@ export function RecipeDetailsPage() {
   };
 
   if (isLoading) return <TableSkeleton rows={5} />;
-  if (!recipe) return null;
+  if (!recipe)
+    return (
+      <div className="flex flex-col items-center justify-center py-24 text-center">
+        <p className="text-sm text-muted-foreground mb-4">Recipe not found</p>
+        <Button asChild>
+          <Link to="/recipes">Back to recipes</Link>
+        </Button>
+      </div>
+    );
 
   return (
     <div className="max-w-2xl space-y-6">
@@ -106,7 +114,11 @@ export function RecipeDetailsPage() {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div className="space-y-1.5">
           <Label htmlFor="name">Name</Label>
-          <Input id="name" placeholder="e.g. Margherita Pizza" {...register("name")} />
+          <Input
+            id="name"
+            placeholder="e.g. Margherita Pizza"
+            {...register("name")}
+          />
           <FieldError error={errors.name} />
         </div>
 
@@ -177,7 +189,8 @@ export function RecipeDetailsPage() {
 
         <div className="space-y-1 rounded-lg border bg-muted/50 p-4">
           <p className="text-sm">
-            Food cost: <span className="font-medium">{liveFoodCost.toFixed(2)}</span>
+            Food cost:{" "}
+            <span className="font-medium">{liveFoodCost.toFixed(2)}</span>
           </p>
           <p className="text-sm">
             Food cost percentage:{" "}
@@ -191,7 +204,11 @@ export function RecipeDetailsPage() {
 
         <div className="space-y-1.5">
           <Label htmlFor="instructions">Instructions</Label>
-          <Input id="instructions" placeholder="Preparation steps" {...register("instructions")} />
+          <Input
+            id="instructions"
+            placeholder="Preparation steps"
+            {...register("instructions")}
+          />
           <FieldError error={errors.instructions} />
         </div>
 
@@ -243,26 +260,45 @@ export function RecipeDetailsPage() {
 
         <div className="space-y-1.5">
           <Label htmlFor="photoUrl">Photo URL</Label>
-          <Input id="photoUrl" placeholder="https://..." {...register("photoUrl")} />
+          <Input
+            id="photoUrl"
+            placeholder="https://..."
+            {...register("photoUrl")}
+          />
           <FieldError error={errors.photoUrl} />
         </div>
 
         <div className="grid grid-cols-3 gap-4">
           <div className="space-y-1.5">
             <Label htmlFor="portions">Portions</Label>
-            <Input id="portions" type="number" placeholder="0" {...register("portions")} />
+            <Input
+              id="portions"
+              type="number"
+              placeholder="0"
+              {...register("portions")}
+            />
             <FieldError error={errors.portions} />
           </div>
 
           <div className="space-y-1.5">
             <Label htmlFor="yieldWeight">Yield weight</Label>
-            <Input id="yieldWeight" type="number" placeholder="0" {...register("yieldWeight")} />
+            <Input
+              id="yieldWeight"
+              type="number"
+              placeholder="0"
+              {...register("yieldWeight")}
+            />
             <FieldError error={errors.yieldWeight} />
           </div>
 
           <div className="space-y-1.5">
             <Label htmlFor="salePrice">Sale price</Label>
-            <Input id="salePrice" type="number" placeholder="0.00" {...register("salePrice")} />
+            <Input
+              id="salePrice"
+              type="number"
+              placeholder="0.00"
+              {...register("salePrice")}
+            />
             <FieldError error={errors.salePrice} />
           </div>
         </div>
