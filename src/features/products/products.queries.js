@@ -22,8 +22,17 @@ export function useProduct(id) {
 export function useCreateProducts() {
   return useMutation({
     mutationFn: createProduct,
-    onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ['products']})
+    onSuccess: (response) => {
+      queryClient.setQueryData(['products'], (old) => {
+        if(!old) return old;
+        return {
+          ...old, 
+          data: {
+            ...old.data,
+            products: [...old.data.products, response.data],
+          },
+        };
+      })
       toast.success('Product created')
     }
   })

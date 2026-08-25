@@ -1,7 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { recipeSchema } from "./recipe.schema";
 import { useRecipe, useUpdateRecipe } from "./recipes.queries.js";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useFieldArray, useForm, Controller } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,6 +19,7 @@ import { FieldError } from "@/components/FieldError";
 import { TableSkeleton } from "@/components/TableSkeleton";
 import { useCategories } from "../categories/categories.queries";
 import { useProducts } from "../products/products.queries";
+import { InlineProductCreate } from "./InlineProductCreate";
 
 export function RecipeDetailsPage() {
   const { id } = useParams();
@@ -42,11 +43,11 @@ export function RecipeDetailsPage() {
   const navigate = useNavigate();
   const { data, isLoading } = useRecipe(id);
   const { data: categoriesData } = useCategories();
-  const categories = categoriesData?.data ?? [];
-
+  const [isAddingProduct, setIsAddingProduct] = useState(false);
   const { data: productsData } = useProducts();
-  const products = productsData?.data.products ?? [];
 
+  const categories = categoriesData?.data ?? [];
+  const products = productsData?.data.products ?? [];
   const recipe = data?.data ?? null;
 
   useEffect(() => {
@@ -133,6 +134,23 @@ export function RecipeDetailsPage() {
             >
               Add ingredient
             </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setIsAddingProduct(true)}
+            >
+              New product
+            </Button>
+            {isAddingProduct && (
+              <InlineProductCreate
+                onCreated={(newProduct) => {
+                  append({ productId: newProduct.id, quantity: "" });
+                  setIsAddingProduct(false);
+                }}
+                onCancel={() => setIsAddingProduct(false)}
+              />
+            )}
           </div>
 
           {fields.length === 0 && (
@@ -191,14 +209,6 @@ export function RecipeDetailsPage() {
           <p className="text-sm">
             Food cost:{" "}
             <span className="font-medium">{liveFoodCost.toFixed(2)}</span>
-          </p>
-          <p className="text-sm">
-            Food cost percentage:{" "}
-            <span className="font-medium">
-              {liveFoodCostPercentage() !== null
-                ? `${liveFoodCostPercentage().toFixed(1)}%`
-                : "—"}
-            </span>
           </p>
         </div>
 
@@ -301,6 +311,17 @@ export function RecipeDetailsPage() {
             />
             <FieldError error={errors.salePrice} />
           </div>
+        </div>
+
+        <div className="space-y-1 rounded-lg border bg-muted/50 p-4">
+          <p className="text-sm">
+            Food cost percentage:{" "}
+            <span className="font-medium">
+              {liveFoodCostPercentage() !== null
+                ? `${liveFoodCostPercentage().toFixed(1)}%`
+                : "—"}
+            </span>
+          </p>
         </div>
 
         <div className="flex gap-3 pt-2">

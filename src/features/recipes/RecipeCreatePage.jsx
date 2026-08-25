@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useFieldArray, useForm, Controller } from "react-hook-form";
 import { useNavigate, Link } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,6 +18,7 @@ import { useCreateRecipe } from "./recipes.queries.js";
 import { useProducts } from "../products/products.queries.js";
 import { useCategories } from "../categories/categories.queries.js";
 import { FieldError } from "@/components/FieldError.jsx";
+import { InlineProductCreate } from "./InlineProductCreate.jsx";
 
 export function RecipeCreatePage() {
   const {
@@ -34,6 +36,7 @@ export function RecipeCreatePage() {
       ingredients: [],
     },
   });
+  const [isAddingProduct, setIsAddingProduct] = useState(false);
   const { fields, append, remove } = useFieldArray({
     control,
     name: "ingredients",
@@ -73,13 +76,19 @@ export function RecipeCreatePage() {
     <div className="max-w-2xl space-y-6">
       <div className="space-y-1">
         <h1 className="text-2xl font-semibold tracking-tight">New recipe</h1>
-        <p className="text-sm text-muted-foreground">Add a new recipe to your menu</p>
+        <p className="text-sm text-muted-foreground">
+          Add a new recipe to your menu
+        </p>
       </div>
 
       <form onSubmit={handleSubmit(onHandleSubmit)} className="space-y-6">
         <div className="space-y-1.5">
           <Label htmlFor="name">Name</Label>
-          <Input id="name" placeholder="e.g. Margherita Pizza" {...register("name")} />
+          <Input
+            id="name"
+            placeholder="e.g. Margherita Pizza"
+            {...register("name")}
+          />
           <FieldError error={errors.name} />
         </div>
 
@@ -94,6 +103,23 @@ export function RecipeCreatePage() {
             >
               Add ingredient
             </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setIsAddingProduct(true)}
+            >
+              New product
+            </Button>
+            {isAddingProduct && (
+              <InlineProductCreate
+                onCreated={(newProduct) => {
+                  append({ productId: newProduct.id, quantity: "" });
+                  setIsAddingProduct(false);
+                }}
+                onCancel={() => setIsAddingProduct(false)}
+              />
+            )}
           </div>
 
           {fields.length === 0 && (
@@ -109,21 +135,29 @@ export function RecipeCreatePage() {
                   name={`ingredients.${index}.productId`}
                   control={control}
                   render={({ field }) => (
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select product" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {products.map((p) => (
-                          <SelectItem key={p.id} value={p.id}>
-                            {p.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select product" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {products.map((p) => (
+                            <SelectItem key={p.id} value={p.id}>
+                              {p.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+
+                      <FieldError
+                        error={errors.ingredients?.[index]?.productId}
+                      />
+                    </>
                   )}
                 />
-                <FieldError error={errors.ingredients?.[index]?.productId} />
               </div>
 
               <div className="w-28 space-y-1">
@@ -150,21 +184,18 @@ export function RecipeCreatePage() {
 
         <div className="space-y-1 rounded-lg border bg-muted/50 p-4">
           <p className="text-sm">
-            Food cost: <span className="font-medium">{liveFoodCost.toFixed(2)}</span>
-          </p>
-          <p className="text-sm">
-            Food cost percentage:{" "}
-            <span className="font-medium">
-              {liveFoodCostPercentage() !== null
-                ? `${liveFoodCostPercentage().toFixed(1)}%`
-                : "—"}
-            </span>
+            Food cost:{" "}
+            <span className="font-medium">{liveFoodCost.toFixed(2)}</span>
           </p>
         </div>
 
         <div className="space-y-1.5">
           <Label htmlFor="instructions">Instructions</Label>
-          <Input id="instructions" placeholder="Preparation steps" {...register("instructions")} />
+          <Input
+            id="instructions"
+            placeholder="Preparation steps"
+            {...register("instructions")}
+          />
           <FieldError error={errors.instructions} />
         </div>
 
@@ -216,28 +247,58 @@ export function RecipeCreatePage() {
 
         <div className="space-y-1.5">
           <Label htmlFor="photoUrl">Photo URL</Label>
-          <Input id="photoUrl" placeholder="https://..." {...register("photoUrl")} />
+          <Input
+            id="photoUrl"
+            placeholder="https://..."
+            {...register("photoUrl")}
+          />
           <FieldError error={errors.photoUrl} />
         </div>
 
         <div className="grid grid-cols-3 gap-4">
           <div className="space-y-1.5">
             <Label htmlFor="portions">Portions</Label>
-            <Input id="portions" type="number" placeholder="0" {...register("portions")} />
+            <Input
+              id="portions"
+              type="number"
+              placeholder="0"
+              {...register("portions")}
+            />
             <FieldError error={errors.portions} />
           </div>
 
           <div className="space-y-1.5">
             <Label htmlFor="yieldWeight">Yield weight</Label>
-            <Input id="yieldWeight" type="number" placeholder="0" {...register("yieldWeight")} />
+            <Input
+              id="yieldWeight"
+              type="number"
+              placeholder="0"
+              {...register("yieldWeight")}
+            />
             <FieldError error={errors.yieldWeight} />
           </div>
 
           <div className="space-y-1.5">
             <Label htmlFor="salePrice">Sale price</Label>
-            <Input id="salePrice" type="number" placeholder="0.00" {...register("salePrice")} />
+            <Input
+              id="salePrice"
+              type="number"
+              placeholder="0.00"
+              {...register("salePrice")}
+            />
             <FieldError error={errors.salePrice} />
           </div>
+        </div>
+
+        <div className="space-y-1 rounded-lg border bg-muted/50 p-4">
+          <p className="text-sm">
+            Food cost percentage:{" "}
+            <span className="font-medium">
+              {liveFoodCostPercentage() !== null
+                ? `${liveFoodCostPercentage().toFixed(1)}%`
+                : "—"}
+            </span>
+          </p>
         </div>
 
         <div className="flex gap-3 pt-2">
