@@ -30,6 +30,7 @@ export function ProductDetailsPage() {
         name: product.name,
         price: product.price,
         quantity: product.quantity,
+        unit: product.unit,
       });
     }
   }, [product]);
@@ -81,6 +82,18 @@ export function ProductDetailsPage() {
             <p className="text-sm text-destructive">
               {errors.quantity.message}
             </p>
+          )}
+        </div>
+        <div className="space-y-1.5">
+          <Label htmlFor="unit">Unit</Label>
+          <Input
+            id="unit"
+            type="string"
+            placeholder="g, ml, kg,"
+            {...register("unit")}
+          />
+          {errors.unit && (
+            <p className="text-sm text-destructive">{errors.unit.message}</p>
           )}
         </div>
         <div className="flex gap-3 pt-2">
