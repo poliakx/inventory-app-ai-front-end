@@ -34,6 +34,10 @@ export function useCreateProducts() {
         };
       })
       toast.success('Product created')
+    },
+    onError: (error) => {
+      const message = error.response?.data?.message ?? "Something went wrong"
+      toast.error(message)
     }
   })
 }
@@ -44,6 +48,10 @@ export function useUpdateProduct() {
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: ['products']})
       toast.success('Product updated')
+    },
+    onError: (error) => {
+      const message = error.response?.data?.message ?? "Something went wrong"
+      toast.error(message)
     }
   })
 }
@@ -54,6 +62,10 @@ export function useDeleteProduct() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['products'] })
       toast.success('Product deleted')
+    },
+    onError: (error) => {
+      const message = error.response?.data?.message ?? "Something went wrong"
+      toast.error(message)
     }
   })
 }
