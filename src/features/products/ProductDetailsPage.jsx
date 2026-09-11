@@ -1,9 +1,16 @@
 import { useParams, Link } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { TableSkeleton } from "@/components/TableSkeleton";
 import { productSchema } from "./products.schema.js";
 import { useProduct, useUpdateProduct } from "./products.queries.js";
@@ -15,6 +22,8 @@ export function ProductDetailsPage() {
     register,
     handleSubmit,
     reset,
+    control,
+    watch,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(productSchema),
@@ -31,9 +40,12 @@ export function ProductDetailsPage() {
         price: product.price,
         quantity: product.quantity,
         unit: product.unit,
+        avgWeightGrams: product.avgWeightGrams,
       });
     }
   }, [product]);
+
+  const unit = watch("unit");
 
   const updateMutation = useUpdateProduct();
 
@@ -86,14 +98,43 @@ export function ProductDetailsPage() {
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="unit">Unit</Label>
-          <Input
-            id="unit"
-            type="string"
-            placeholder="g, ml, kg,"
-            {...register("unit")}
+          <Controller
+            name="unit"
+            control={control}
+            render={({ field }) => (
+              <Select onValueChange={field.onChange} value={field.value}>
+                <SelectTrigger id="unit" className="w-full">
+                  <SelectValue placeholder="Select unit" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="g">g</SelectItem>
+                  <SelectItem value="kg">kg</SelectItem>
+                  <SelectItem value="ml">ml</SelectItem>
+                  <SelectItem value="l">l</SelectItem>
+                  <SelectItem value="pcs">pcs</SelectItem>
+                </SelectContent>
+              </Select>
+            )}
           />
           {errors.unit && (
             <p className="text-sm text-destructive">{errors.unit.message}</p>
+          )}
+        </div>
+        <div>
+          {(unit === "pcs" || unit === "ml" || unit === "l") && (
+            <div>
+              <Label htmlFor="avgWeightGrams">Average Weight Grams</Label>
+              <Input
+                id="avgWeightGrams"
+                type="number"
+                {...register("avgWeightGrams")}
+              />
+              {errors.avgWeightGrams && (
+                <p className="text-sm text-destructive">
+                  {errors.avgWeightGrams.message}
+                </p>
+              )}
+            </div>
           )}
         </div>
         <div className="flex gap-3 pt-2">
