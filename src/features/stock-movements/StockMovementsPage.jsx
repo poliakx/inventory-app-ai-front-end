@@ -83,6 +83,7 @@ export default function StockMovementsPage() {
         />
         <input
           type="number"
+          step="any"
           placeholder="Quantity"
           className="h-9 w-28 rounded-md border border-input bg-transparent px-3 text-sm shadow-xs"
           {...register("quantity", { valueAsNumber: true })}

@@ -91,7 +91,7 @@ export function ProductDetailsPage() {
           <Label htmlFor="quantity">
             Quantity{unit ? ` (${unit})` : ""}
           </Label>
-          <Input id="quantity" type="number" {...register("quantity")} />
+          <Input id="quantity" type="number" step="any" {...register("quantity")} />
           {errors.quantity && (
             <p className="text-sm text-destructive">
               {errors.quantity.message}
@@ -129,6 +129,7 @@ export function ProductDetailsPage() {
               <Input
                 id="avgWeightGrams"
                 type="number"
+                step="any"
                 {...register("avgWeightGrams")}
               />
               {errors.avgWeightGrams && (

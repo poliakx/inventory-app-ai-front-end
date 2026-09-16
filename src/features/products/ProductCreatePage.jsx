@@ -72,6 +72,7 @@ export function ProductCreatePage() {
           <Input
             id="quantity"
             type="number"
+            step="any"
             placeholder="0"
             {...register("quantity")}
           />
@@ -112,6 +113,7 @@ export function ProductCreatePage() {
               <Input
                 id="avgWeightGrams"
                 type="number"
+                step="any"
                 {...register("avgWeightGrams")}
               />
               {errors.avgWeightGrams && (

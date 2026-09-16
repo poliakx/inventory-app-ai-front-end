@@ -21,11 +21,13 @@ export function InlineProductCreate({ onCreated, onCancel }) {
         placeholder="Price"
         value={price}
         type="number"
+        step="any"
         onChange={(e) => setPrice(e.target.value)}
       />
       <Input
         placeholder="Quantity"
         type="number"
+        step="any"
         value={quantity}
         onChange={(e) => setQuantity(e.target.value)}
       />

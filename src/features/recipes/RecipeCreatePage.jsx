@@ -173,6 +173,7 @@ export function RecipeCreatePage() {
               <div className="w-28 space-y-1">
                 <Input
                   type="number"
+                  step="any"
                   placeholder="Qty"
                   {...register(`ingredients.${index}.quantity`)}
                 />
@@ -204,6 +205,7 @@ export function RecipeCreatePage() {
           <Input
             id="yieldWeight"
             type="number"
+            step="any"
             placeholder="Auto-calculated once every ingredient has a weight"
             {...register("yieldWeight")}
           />
@@ -216,6 +218,7 @@ export function RecipeCreatePage() {
             <Input
               id="portionWeight"
               type="number"
+              step="any"
               placeholder="0"
               {...register("portionWeight")}
             />
@@ -227,6 +230,7 @@ export function RecipeCreatePage() {
             <Input
               id="salePrice"
               type="number"
+              step="any"
               placeholder="0.00"
               {...register("salePrice")}
             />
