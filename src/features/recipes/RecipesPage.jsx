@@ -57,16 +57,16 @@ export function RecipesPage() {
                   Name
                 </th>
                 <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  Portions
-                </th>
-                <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Food cost
                 </th>
                 <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  Food cost %
+                  Portion weight
                 </th>
                 <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  Sale price
+                  Price per portion
+                </th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                  Food cost %
                 </th>
                 <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider"></th>
               </tr>
@@ -86,18 +86,18 @@ export function RecipesPage() {
                     </Link>
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">
-                    {recipe.portions}
+                    {recipe.foodCost != null ? Number(recipe.foodCost).toFixed(2) : "—"}
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">
-                    {recipe.foodCost != null ? Number(recipe.foodCost).toFixed(2) : "—"}
+                    {recipe.portionWeight != null ? Number(recipe.portionWeight).toFixed(0) : "—"}
+                  </td>
+                  <td className="px-4 py-3 text-muted-foreground">
+                    {recipe.salePrice != null ? Number(recipe.salePrice).toFixed(2) : "—"}
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">
                     {recipe.foodCostPercentage != null
                       ? `${Number(recipe.foodCostPercentage).toFixed(1)}%`
                       : "—"}
-                  </td>
-                  <td className="px-4 py-3 text-muted-foreground">
-                    {recipe.salePrice != null ? Number(recipe.salePrice).toFixed(2) : "—"}
                   </td>
                   <td className="px-4 py-3 text-right">
                     <Button

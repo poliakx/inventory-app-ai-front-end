@@ -20,6 +20,11 @@ import { TableSkeleton } from "@/components/TableSkeleton";
 import { useCategories } from "../categories/categories.queries";
 import { useProducts } from "../products/products.queries";
 import { InlineProductCreate } from "./InlineProductCreate";
+import {
+  computeFoodCost,
+  computeTotalWeight,
+  computeFoodCostPercentage,
+} from "./recipes.utils.js";
 
 export function RecipeDetailsPage() {
   const { id } = useParams();
@@ -29,6 +34,7 @@ export function RecipeDetailsPage() {
     handleSubmit,
     reset,
     watch,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(recipeSchema),
@@ -60,8 +66,8 @@ export function RecipeDetailsPage() {
         yieldWeight: recipe.yieldWeight,
         instructions: recipe.instructions,
         photoUrl: recipe.photoUrl,
-        portions: recipe.portions,
         salePrice: recipe.salePrice,
+        portionWeight: recipe.portionWeight,
       });
     }
   }, [recipe]);
@@ -70,20 +76,17 @@ export function RecipeDetailsPage() {
 
   const watchedIngredients = watch("ingredients");
   const watchedSalePrice = watch("salePrice");
+  const watchedPortionWeight = watch("portionWeight");
 
-  const liveFoodCost = watchedIngredients.reduce((sum, acc) => {
-    const product = products.find((p) => p.id === acc.productId);
-    if (!product) {
-      return sum;
-    }
-    return sum + product.price * acc.quantity;
-  }, 0);
+  const liveFoodCost = computeFoodCost(watchedIngredients, products);
+  const totalWeight = computeTotalWeight(watchedIngredients, products);
 
-  const liveFoodCostPercentage = () => {
-    if (Number.isNaN(Number(watchedSalePrice)) || Number(watchedSalePrice) <= 0)
-      return null;
-    return (liveFoodCost / watchedSalePrice) * 100;
-  };
+  const foodCostPercentage = computeFoodCostPercentage(
+    liveFoodCost,
+    totalWeight,
+    watchedPortionWeight,
+    watchedSalePrice,
+  );
 
   const onSubmit = (data) => {
     updateMutation.mutate(
@@ -93,6 +96,12 @@ export function RecipeDetailsPage() {
       },
     );
   };
+
+  useEffect(() => {
+    if (!Number.isNaN(totalWeight)) {
+      setValue("yieldWeight", totalWeight);
+    }
+  }, [totalWeight, setValue]);
 
   if (isLoading) return <TableSkeleton rows={5} />;
   if (!recipe)
@@ -213,6 +222,52 @@ export function RecipeDetailsPage() {
         </div>
 
         <div className="space-y-1.5">
+          <Label htmlFor="yieldWeight">Yield weight (g)</Label>
+          <Input
+            id="yieldWeight"
+            type="number"
+            placeholder="Auto-calculated once every ingredient has a weight"
+            {...register("yieldWeight")}
+          />
+          <FieldError error={errors.yieldWeight} />
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-1.5">
+            <Label htmlFor="portionWeight">Portion weight (g)</Label>
+            <Input
+              id="portionWeight"
+              type="number"
+              placeholder="0"
+              {...register("portionWeight")}
+            />
+            <FieldError error={errors.portionWeight} />
+          </div>
+
+          <div className="space-y-1.5">
+            <Label htmlFor="salePrice">Price per portion</Label>
+            <Input
+              id="salePrice"
+              type="number"
+              placeholder="0.00"
+              {...register("salePrice")}
+            />
+            <FieldError error={errors.salePrice} />
+          </div>
+        </div>
+
+        <div className="space-y-1 rounded-lg border bg-muted/50 p-4">
+          <p className="text-sm">
+            Food cost percentage:{" "}
+            <span className="font-medium">
+              {foodCostPercentage !== null
+                ? `${foodCostPercentage.toFixed(1)}%`
+                : "—"}
+            </span>
+          </p>
+        </div>
+
+        <div className="space-y-1.5">
           <Label htmlFor="instructions">Instructions</Label>
           <Input
             id="instructions"
@@ -276,52 +331,6 @@ export function RecipeDetailsPage() {
             {...register("photoUrl")}
           />
           <FieldError error={errors.photoUrl} />
-        </div>
-
-        <div className="grid grid-cols-3 gap-4">
-          <div className="space-y-1.5">
-            <Label htmlFor="portions">Portions</Label>
-            <Input
-              id="portions"
-              type="number"
-              placeholder="0"
-              {...register("portions")}
-            />
-            <FieldError error={errors.portions} />
-          </div>
-
-          <div className="space-y-1.5">
-            <Label htmlFor="yieldWeight">Yield weight</Label>
-            <Input
-              id="yieldWeight"
-              type="number"
-              placeholder="0"
-              {...register("yieldWeight")}
-            />
-            <FieldError error={errors.yieldWeight} />
-          </div>
-
-          <div className="space-y-1.5">
-            <Label htmlFor="salePrice">Sale price</Label>
-            <Input
-              id="salePrice"
-              type="number"
-              placeholder="0.00"
-              {...register("salePrice")}
-            />
-            <FieldError error={errors.salePrice} />
-          </div>
-        </div>
-
-        <div className="space-y-1 rounded-lg border bg-muted/50 p-4">
-          <p className="text-sm">
-            Food cost percentage:{" "}
-            <span className="font-medium">
-              {liveFoodCostPercentage() !== null
-                ? `${liveFoodCostPercentage().toFixed(1)}%`
-                : "—"}
-            </span>
-          </p>
         </div>
 
         <div className="flex gap-3 pt-2">

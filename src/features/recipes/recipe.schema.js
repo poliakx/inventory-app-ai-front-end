@@ -2,7 +2,13 @@ import { z } from "zod"
 
 export const recipeSchema = z.object({
   name: z.string().min(1, "Name is required"),
-  categoryId: z.string().optional(),
+  categoryId: z.preprocess((val) => {
+    if(val === "" || val === null){
+      return undefined
+    } else {
+      return val
+    }
+  }, z.string().uuid().optional()),
   ingredients: z.array(
     z.object({
       productId: z.string().uuid(),
@@ -17,8 +23,8 @@ export const recipeSchema = z.object({
       return val
     }
   }, z.string().url().optional()),
-  portions: z.coerce.number().int().positive("Portions must be grater than 0").optional(),
   yieldWeight: z.coerce.number().nonnegative().optional(),
   salePrice: z.coerce.number().nonnegative().optional(),
-  yieldUnit: z.enum(["g", "ml", "pcs"]).default("g")
+  yieldUnit: z.enum(["g", "ml", "pcs"]).default("g"),
+  portionWeight: z.coerce.number().nonnegative().optional()
 })
