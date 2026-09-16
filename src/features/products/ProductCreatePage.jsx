@@ -66,7 +66,9 @@ export function ProductCreatePage() {
           )}
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="quantity">Quantity</Label>
+          <Label htmlFor="quantity">
+            Quantity{unit ? ` (${unit})` : ""}
+          </Label>
           <Input
             id="quantity"
             type="number"

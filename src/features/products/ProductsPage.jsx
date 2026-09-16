@@ -56,11 +56,15 @@ export function ProductsPage() {
                 <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Name
                 </th>
+
                 <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  Price
+                  Unit
                 </th>
                 <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Quantity
+                </th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                  Price
                 </th>
                 <th className="px-4 py-3" />
               </tr>
@@ -80,11 +84,15 @@ export function ProductsPage() {
                     </Link>
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">
-                    {product.price}
+                    {product.unit}
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">
                     {product.quantity}
                   </td>
+                  <td className="px-4 py-3 text-muted-foreground">
+                    {product.price}
+                  </td>
+
                   <td className="px-4 py-3 text-right">
                     <Button
                       variant="ghost"
