@@ -21,6 +21,12 @@ export const apiClient = axios.create({
      console.error(error)
      const originalRequest = error.config
 
+     if(originalRequest.url === '/auth/refresh') {
+      useAuthStore.getState().logout();
+      window.location.href = '/login';
+      return Promise.reject(error)
+     }
+
      if(originalRequest._retry && error.response?.status === 401){
        useAuthStore.getState().logout();
       window.location.href = '/login';
