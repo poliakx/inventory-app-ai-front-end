@@ -1,31 +1,44 @@
+import { toNumber } from "@/lib/numbers.js";
+
 export const gramsForIngredient = (ingredient, products) => {
   const product = products.find((p) => p.id === ingredient.productId);
-  if (!product) return undefined;
+  if (!product) return null;
 
-  if (product.unit === "g") return ingredient.quantity;
-  if (product.unit === "kg") return ingredient.quantity * 1000;
+  const quantity = toNumber(ingredient.quantity)
+  const avgWeightGrams = toNumber(product.avgWeightGrams)
+  if(quantity===null) return null
+  if (product.unit === "g") return quantity;
+  if (product.unit === "kg") return quantity * 1000;
 
   const needsAvgWeight = product.unit === "ml" || product.unit === "l" || product.unit === "pcs";
-  if (needsAvgWeight && product.avgWeightGrams) {
-    return ingredient.quantity * product.avgWeightGrams;
+  if (needsAvgWeight && avgWeightGrams) {
+    return quantity * avgWeightGrams;
   }
 
-  return undefined;
+  return null;
 };
 
 export const computeFoodCost = (ingredients, products ) => {
   return ingredients.reduce((sum, acc) => {
     const product = products.find((p) => p.id === acc.productId);
+    
       if (!product) {
         return sum;
       }
-      return sum + product.price * acc.quantity;
+      const price = toNumber(product.price)
+      const quantity = toNumber(acc.quantity)
+      if (!price || !quantity) return sum
+      return sum + price * quantity;
   }, 0);
 }
 
 export const computeTotalWeight = (ingredients, products) => {
-   return ingredients.reduce((sum, acc) => 
-    sum + gramsForIngredient(acc, products), 0);
+  const gramsArr = ingredients.map((g) => {
+    return  gramsForIngredient(g, products)
+  }) 
+    if(gramsArr.includes(null)) return null
+   return gramsArr.reduce((sum, acc) => 
+    sum + acc, 0);
 }
 
 export const computeFoodCostPercentage = (foodCost, totalWeight, portionWeight, salePrice) => {
