@@ -4,11 +4,9 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { TableSkeleton } from "@/components/TableSkeleton.jsx";
+import { formatAmount, formatMoney, formatPercent } from "@/lib/numbers.js";
 
 export function RecipesPage() {
-  // TODO: wire up pagination — backend already supports page/limit (see recipes.service.js)
-  // eslint-disable-next-line no-unused-vars
-  const [page, setPage] = useState();
   const [search, setSearch] = useState("");
   const { data, isLoading } = useRecipes();
   const recipes = data?.data.recipes ?? [];
@@ -86,18 +84,16 @@ export function RecipesPage() {
                     </Link>
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">
-                    {recipe.foodCost != null ? Number(recipe.foodCost).toFixed(2) : "—"}
+                    {formatMoney(recipe.foodCost)}
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">
-                    {recipe.portionWeight != null ? Number(recipe.portionWeight).toFixed(0) : "—"}
+                    {formatAmount(recipe.portionWeight)}
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">
-                    {recipe.salePrice != null ? Number(recipe.salePrice).toFixed(2) : "—"}
+                    {formatMoney(recipe.salePrice)}
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">
-                    {recipe.foodCostPercentage != null
-                      ? `${Number(recipe.foodCostPercentage).toFixed(1)}%`
-                      : "—"}
+                    {formatPercent(recipe.foodCostPercentage)}
                   </td>
                   <td className="px-4 py-3 text-right">
                     <Button
