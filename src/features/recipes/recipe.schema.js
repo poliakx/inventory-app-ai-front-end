@@ -1,4 +1,5 @@
 import { z } from "zod"
+import { optionalPositiveNumber } from "@/lib/zod.js"
 
 export const recipeSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -15,16 +16,7 @@ export const recipeSchema = z.object({
       quantity: z.coerce.number().positive()
     })
   ).min(1),
-  instructions: z.string().optional(),
-  photoUrl: z.preprocess((val) => {
-    if(val === "" || val === null){
-      return undefined
-    } else {
-      return val
-    }
-  }, z.string().url().optional()),
-  yieldWeight: z.coerce.number().nonnegative().optional(),
-  salePrice: z.coerce.number().nonnegative().optional(),
-  yieldUnit: z.enum(["g", "ml", "pcs"]).default("g"),
-  portionWeight: z.coerce.number().nonnegative().optional()
+  yieldWeight: optionalPositiveNumber,
+  salePrice: optionalPositiveNumber,
+  portionWeight: optionalPositiveNumber
 })
