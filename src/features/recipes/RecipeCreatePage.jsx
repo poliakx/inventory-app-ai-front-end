@@ -103,34 +103,37 @@ export function RecipeCreatePage() {
         </div>
 
         <div className="space-y-3">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-2">
             <Label>Ingredients</Label>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => append({ productId: "", quantity: "" })}
-            >
-              Add ingredient
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => setIsAddingProduct(true)}
-            >
-              New product
-            </Button>
-            {isAddingProduct && (
-              <InlineProductCreate
-                onCreated={(newProduct) => {
-                  append({ productId: newProduct.id, quantity: "" });
-                  setIsAddingProduct(false);
-                }}
-                onCancel={() => setIsAddingProduct(false)}
-              />
-            )}
+            <div className="flex shrink-0 gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => append({ productId: "", quantity: "" })}
+              >
+                Add ingredient
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setIsAddingProduct(true)}
+              >
+                New product
+              </Button>
+            </div>
           </div>
+
+          {isAddingProduct && (
+            <InlineProductCreate
+              onCreated={(newProduct) => {
+                append({ productId: newProduct.id, quantity: "" });
+                setIsAddingProduct(false);
+              }}
+              onCancel={() => setIsAddingProduct(false)}
+            />
+          )}
 
           {fields.length === 0 && (
             <p className="text-sm text-muted-foreground">
@@ -138,16 +141,14 @@ export function RecipeCreatePage() {
             </p>
           )}
 
-          {fields.map
-          ((item, index) => {
+          {fields.map((item, index) => {
             const ingredientObj = watchedIngredients[index];
             const productId = ingredientObj?.productId;
-            const product = findProduct(item.productId, products);
-            console.log(product)
+            const product = findProduct(productId, products);
             const unit = product?.unit;
             return (
               <div key={item.id} className="flex items-start gap-2">
-                <div className="flex-1 space-y-1">
+                <div className="min-w-0 flex-1 space-y-1">
                   <Controller
                     name={`ingredients.${index}.productId`}
                     control={control}
@@ -200,7 +201,7 @@ export function RecipeCreatePage() {
                   variant="ghost"
                   size="sm"
                   onClick={() => remove(index)}
-                  className="text-muted-foreground hover:text-destructive"
+                  className="shrink-0 text-muted-foreground hover:text-destructive"
                 >
                   Remove
                 </Button>
@@ -228,7 +229,7 @@ export function RecipeCreatePage() {
           <FieldError error={errors.yieldWeight} />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-1.5">
             <Label htmlFor="portionWeight">Portion weight (g)</Label>
             <Input
@@ -265,7 +266,7 @@ export function RecipeCreatePage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div>
           <div className="space-y-1.5">
             <Label htmlFor="categoryId">Category</Label>
             <Controller

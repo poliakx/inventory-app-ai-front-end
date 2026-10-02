@@ -11,45 +11,50 @@ export function InlineProductCreate({ onCreated, onCancel }) {
   const createMutation = useCreateProducts();
 
   return (
-    <div>
-      <Input
-        placeholder="Name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
-      <Input
-        placeholder="Price"
-        value={price}
-        type="number"
-        step="any"
-        onChange={(e) => setPrice(e.target.value)}
-      />
-      <Input
-        placeholder="Quantity"
-        type="number"
-        step="any"
-        value={quantity}
-        onChange={(e) => setQuantity(e.target.value)}
-      />
+    <div className="space-y-3 rounded-lg border p-4">
+      <p className="text-sm font-medium">New product</p>
+      <div className="grid gap-2 sm:grid-cols-3">
+        <Input
+          placeholder="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <Input
+          placeholder="Price"
+          value={price}
+          type="number"
+          step="any"
+          onChange={(e) => setPrice(e.target.value)}
+        />
+        <Input
+          placeholder="Quantity"
+          type="number"
+          step="any"
+          value={quantity}
+          onChange={(e) => setQuantity(e.target.value)}
+        />
+      </div>
 
-      <Button
-        type="button"
-        onClick={() => {
-          createMutation.mutate(
-            { name, price: Number(price), quantity: Number(quantity) },
-            {
-              onSuccess: (response) => {
-                onCreated(response.data);
+      <div className="flex gap-2">
+        <Button
+          type="button"
+          onClick={() => {
+            createMutation.mutate(
+              { name, price: Number(price), quantity: Number(quantity) },
+              {
+                onSuccess: (response) => {
+                  onCreated(response.data);
+                },
               },
-            },
-          );
-        }}
-      >
-        Add
-      </Button>
-      <Button type="button" variant="ghost" onClick={onCancel}>
-        Cancel
-      </Button>
+            );
+          }}
+        >
+          Add
+        </Button>
+        <Button type="button" variant="ghost" onClick={onCancel}>
+          Cancel
+        </Button>
+      </div>
     </div>
   );
 }
