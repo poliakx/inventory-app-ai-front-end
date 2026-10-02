@@ -47,8 +47,8 @@ _(watch for these, calibrate review depth accordingly — update as patterns cha
 ## Deployment
 - Vercel, Git import, auto-deploys on push to `main`
 - Custom domain: getkitchenos.app (fallback: inventory-app-ai-front-end.vercel.app)
-- `src/lib/api.js` baseURL reads `VITE_API_URL`, falls back to `/api` locally
-- CORS is backend-side (`back-end/src/config/cors.js`) — new preview URLs need the regex pattern there, not here
+- `src/lib/api.js` baseURL is always `/api` (same-origin): Vite dev proxy → `localhost:3000` locally, `vercel.json` rewrite → Railway (`backend-production-1c76.up.railway.app`) in prod. Don't point it at the Railway URL directly — `*.up.railway.app` is a different site, so the `SameSite=strict` refresh cookie is never sent and users get logged out when the 15-min access token expires
+- Since API calls are same-origin, CORS (`back-end/src/config/cors.js`) no longer matters for the app itself
 
 ## Current Priorities
 1. Close out remaining Phase 0 polish items (see PRODUCT_SPEC.md roadmap)

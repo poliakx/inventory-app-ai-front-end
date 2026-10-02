@@ -4,7 +4,9 @@ import { useAuthStore } from '@/features/auth/authStore.js';
 let refreshPromise = null
 
 export const apiClient = axios.create({ 
-  baseURL: import.meta.env.VITE_API_URL || '/api',
+  // Same-origin in every environment: Vite's dev proxy locally, a
+  // vercel.json rewrite in prod. Keeps the refresh cookie first-party.
+  baseURL: '/api',
   withCredentials: true
 })
 
