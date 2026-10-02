@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { TableSkeleton } from "@/components/TableSkeleton.jsx";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { formatAmount } from "@/lib/numbers.js";
 
 export function ProductsPage() {
   const [search, setSearch] = useState("");
@@ -87,7 +88,7 @@ export function ProductsPage() {
                     {product.unit}
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">
-                    {product.quantity}
+                    {formatAmount(product.quantity)}
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">
                     {product.price}

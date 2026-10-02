@@ -2,6 +2,7 @@ import { useProducts } from "../products/products.queries.js";
 import { useCategories } from "../categories/categories.queries.js";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TableSkeleton } from "@/components/TableSkeleton";
+import { formatAmount } from "@/lib/numbers.js";
 
 export function DashboardPage() {
   const {data: productData, isLoading: productLoading} = useProducts()
@@ -50,7 +51,7 @@ export function DashboardPage() {
                 {lowStock.map(p => (
                   <tr key={p.id} className="border-b last:border-0">
                     <td className="px-4 py-3 font-medium">{p.name}</td>
-                    <td className="px-4 py-3 text-destructive font-medium">{p.quantity}</td>
+                    <td className="px-4 py-3 text-destructive font-medium">{formatAmount(p.quantity)}</td>
                   </tr>
                 ))}
               </tbody>
