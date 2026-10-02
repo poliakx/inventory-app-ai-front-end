@@ -23,6 +23,7 @@ import {
   computeFoodCost,
   computeTotalWeight,
   computeFoodCostPercentage,
+  findProduct,
 } from "./recipes.utils.js";
 
 export function RecipeCreatePage() {
@@ -38,7 +39,6 @@ export function RecipeCreatePage() {
     defaultValues: {
       name: "",
       categoryId: "",
-      yieldUnit: "g",
       ingredients: [],
     },
   });
@@ -138,59 +138,75 @@ export function RecipeCreatePage() {
             </p>
           )}
 
-          {fields.map((item, index) => (
-            <div key={item.id} className="flex items-start gap-2">
-              <div className="flex-1 space-y-1">
-                <Controller
-                  name={`ingredients.${index}.productId`}
-                  control={control}
-                  render={({ field }) => (
-                    <>
-                      <Select
-                        onValueChange={field.onChange}
-                        value={field.value}
-                      >
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select product" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {products.map((p) => (
-                            <SelectItem key={p.id} value={p.id}>
-                              {p.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+          {fields.map
+          ((item, index) => {
+            const ingredientObj = watchedIngredients[index];
+            const productId = ingredientObj?.productId;
+            const product = findProduct(item.productId, products);
+            console.log(product)
+            const unit = product?.unit;
+            return (
+              <div key={item.id} className="flex items-start gap-2">
+                <div className="flex-1 space-y-1">
+                  <Controller
+                    name={`ingredients.${index}.productId`}
+                    control={control}
+                    render={({ field }) => (
+                      <>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select product" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {products.map((p) => (
+                              <SelectItem key={p.id} value={p.id}>
+                                {p.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
 
-                      <FieldError
-                        error={errors.ingredients?.[index]?.productId}
-                      />
-                    </>
-                  )}
-                />
+                        <FieldError
+                          error={errors.ingredients?.[index]?.productId}
+                        />
+                      </>
+                    )}
+                  />
+                </div>
+
+                <div className="w-32 space-y-1">
+                  <div className="relative">
+                    <Input
+                      type="number"
+                      step="any"
+                      placeholder="Qty"
+                      className={unit ? "pr-10" : undefined}
+                      {...register(`ingredients.${index}.quantity`)}
+                    />
+                    {unit && (
+                      <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-sm text-muted-foreground">
+                        {unit}
+                      </span>
+                    )}
+                  </div>
+                  <FieldError error={errors.ingredients?.[index]?.quantity} />
+                </div>
+
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => remove(index)}
+                  className="text-muted-foreground hover:text-destructive"
+                >
+                  Remove
+                </Button>
               </div>
-
-              <div className="w-28 space-y-1">
-                <Input
-                  type="number"
-                  step="any"
-                  placeholder="Qty"
-                  {...register(`ingredients.${index}.quantity`)}
-                />
-                <FieldError error={errors.ingredients?.[index]?.quantity} />
-              </div>
-
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={() => remove(index)}
-                className="text-muted-foreground hover:text-destructive"
-              >
-                Remove
-              </Button>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         <div className="space-y-1 rounded-lg border bg-muted/50 p-4">
@@ -249,16 +265,6 @@ export function RecipeCreatePage() {
           </p>
         </div>
 
-        <div className="space-y-1.5">
-          <Label htmlFor="instructions">Instructions</Label>
-          <Input
-            id="instructions"
-            placeholder="Preparation steps"
-            {...register("instructions")}
-          />
-          <FieldError error={errors.instructions} />
-        </div>
-
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-1.5">
             <Label htmlFor="categoryId">Category</Label>
@@ -282,37 +288,6 @@ export function RecipeCreatePage() {
             />
             <FieldError error={errors.categoryId} />
           </div>
-
-          <div className="space-y-1.5">
-            <Label htmlFor="yieldUnit">Yield unit</Label>
-            <Controller
-              name="yieldUnit"
-              control={control}
-              render={({ field }) => (
-                <Select onValueChange={field.onChange} value={field.value}>
-                  <SelectTrigger id="yieldUnit" className="w-full">
-                    <SelectValue placeholder="Yield unit" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="g">g</SelectItem>
-                    <SelectItem value="ml">ml</SelectItem>
-                    <SelectItem value="pcs">pcs</SelectItem>
-                  </SelectContent>
-                </Select>
-              )}
-            />
-            <FieldError error={errors.yieldUnit} />
-          </div>
-        </div>
-
-        <div className="space-y-1.5">
-          <Label htmlFor="photoUrl">Photo URL</Label>
-          <Input
-            id="photoUrl"
-            placeholder="https://..."
-            {...register("photoUrl")}
-          />
-          <FieldError error={errors.photoUrl} />
         </div>
 
         <div className="flex gap-3 pt-2">

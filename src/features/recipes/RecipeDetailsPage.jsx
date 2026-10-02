@@ -62,10 +62,6 @@ export function RecipeDetailsPage() {
         name: recipe.name,
         categoryId: recipe.categoryId,
         ingredients: recipe.ingredients,
-        yieldUnit: recipe.yieldUnit,
-        yieldWeight: recipe.yieldWeight,
-        instructions: recipe.instructions,
-        photoUrl: recipe.photoUrl,
         salePrice: recipe.salePrice,
         portionWeight: recipe.portionWeight,
       });
@@ -271,16 +267,6 @@ export function RecipeDetailsPage() {
           </p>
         </div>
 
-        <div className="space-y-1.5">
-          <Label htmlFor="instructions">Instructions</Label>
-          <Input
-            id="instructions"
-            placeholder="Preparation steps"
-            {...register("instructions")}
-          />
-          <FieldError error={errors.instructions} />
-        </div>
-
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-1.5">
             <Label htmlFor="categoryId">Category</Label>
@@ -304,37 +290,6 @@ export function RecipeDetailsPage() {
             />
             <FieldError error={errors.categoryId} />
           </div>
-
-          <div className="space-y-1.5">
-            <Label htmlFor="yieldUnit">Yield unit</Label>
-            <Controller
-              name="yieldUnit"
-              control={control}
-              render={({ field }) => (
-                <Select onValueChange={field.onChange} value={field.value}>
-                  <SelectTrigger id="yieldUnit" className="w-full">
-                    <SelectValue placeholder="Yield unit" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="g">g</SelectItem>
-                    <SelectItem value="ml">ml</SelectItem>
-                    <SelectItem value="pcs">pcs</SelectItem>
-                  </SelectContent>
-                </Select>
-              )}
-            />
-            <FieldError error={errors.yieldUnit} />
-          </div>
-        </div>
-
-        <div className="space-y-1.5">
-          <Label htmlFor="photoUrl">Photo URL</Label>
-          <Input
-            id="photoUrl"
-            placeholder="https://..."
-            {...register("photoUrl")}
-          />
-          <FieldError error={errors.photoUrl} />
         </div>
 
         <div className="flex gap-3 pt-2">
