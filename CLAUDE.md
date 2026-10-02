@@ -41,6 +41,7 @@ _(watch for these, calibrate review depth accordingly — update as patterns cha
 - Calling a hook/function instead of passing a reference (`mutationFn: fn(x)` instead of `mutationFn: fn`)
 - Incomplete rename after refactor — fixes most occurrences, misses one
 - File naming inconsistency: singular vs plural (`product.x.js` vs `products.x.js`)
+- `return` alone on a line (ASI inserts `;`) and `if` without braces guarding several lines — the next line silently runs outside the `if` / becomes dead code
 - Genuinely shaky spots: `useState` vs `useQuery` mental model, `queryKey` as an arbitrary cache label (not a URL), why `useEffect` wraps side effects instead of inlining
 
 ## Deployment
