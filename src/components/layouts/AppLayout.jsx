@@ -50,7 +50,7 @@ export function AppLayout() {
           </button>
         </div>
       </aside>
-      <main className="flex-1 min-w-0 overflow-y-auto p-8">
+      <main className="relative flex-1 min-w-0 overflow-y-auto p-8">
         <Outlet />
       </main>
     </div>
